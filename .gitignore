@@ -1,0 +1,23 @@
+# Census DB — regenerate with data/extract_census.py (1.6 GB, SnapPy required)
+data/census.db
+data/census_smoke.db
+
+# Rust
+core/target/
+**/*.rs.bk
+Cargo.lock
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Test goldens are checked in; keep them
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Local machine-specific Claude permission list
+.claude/
