@@ -709,6 +709,98 @@ def gen_adjoint_eta0(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_adjoint_w_scan(out_root: Path) -> int:
+    """W-vector scan goldens (single-cusp)."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_index import compute_refined_index
+    from manifold_index.core.weyl_check import (
+        compute_ab_vectors, scan_w_vectors,
+    )
+
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    m_grid = [-2, -1, 0, 1, 2]
+    e_grid = [Fraction(-2), Fraction(-1), Fraction(-1, 2), Fraction(0),
+              Fraction(1, 2), Fraction(1), Fraction(2)]
+    max_coeff = 3
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entries = []
+        for m in m_grid:
+            for e in e_grid:
+                res = compute_refined_index(nz, [m], [e], qq)
+                entries.append(([m], [e], res))
+        ab = compute_ab_vectors(entries, nz.num_hard)
+        if ab is None:
+            continue
+        scan = scan_w_vectors(entries, nz.num_hard, ab, 0, max_coeff)
+        entries_dump = []
+        for ent in scan.entries:
+            adj_dump = None
+            if ent.adjoint is not None:
+                adj_dump = {
+                    "projected_value": (None if ent.adjoint.projected_value is None
+                                        else int(ent.adjoint.projected_value)),
+                    "is_pass": bool(ent.adjoint.is_pass),
+                    "c_e_x2": sorted(
+                        [[int(Fraction(k) * 2), int(v)] for k, v in ent.adjoint.c_e.items()]
+                    ),
+                    "missing_e_x2": sorted(int(Fraction(e) * 2) for e in ent.adjoint.missing_e),
+                }
+            entries_dump.append({
+                "w": [int(x) for x in ent.w],
+                "a_eff_num": int(ent.a_eff.numerator),
+                "a_eff_den": int(ent.a_eff.denominator),
+                "b_eff_num": int(ent.b_eff.numerator),
+                "b_eff_den": int(ent.b_eff.denominator),
+                "a_eff_is_integer": bool(ent.a_eff_is_integer),
+                "adjoint": adj_dump,
+            })
+        cases.append({
+            "name": name,
+            "num_hard": int(nz.num_hard),
+            "qq_order": qq,
+            "cusp_idx": 0,
+            "max_coeff": max_coeff,
+            "ab": {
+                "a_num": [int(v.numerator) for v in ab.a],
+                "a_den": [int(v.denominator) for v in ab.a],
+                "b_num": [int(v.numerator) for v in ab.b],
+                "b_den": [int(v.denominator) for v in ab.b],
+            },
+            "entries_ref": [
+                {
+                    "m_ext": list(m_ext),
+                    "e_ext_x2": [int(Fraction(v) * 2) for v in e_ext],
+                    "items": sorted(
+                        ({"key": [int(x) for x in k], "coeff": int(v)} for k, v in r.items()),
+                        key=lambda d: d["key"],
+                    ),
+                }
+                for (m_ext, e_ext, r) in entries
+            ],
+            "scan": entries_dump,
+            "passing_count": int(len(scan.passing)),
+        })
+    write_json(out_root / "adjoint_w_scan" / "results.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -747,6 +839,8 @@ def main() -> int:
     total += gen_adjoint_unrefined(out_root)
     print("adjoint_eta0 …", flush=True)
     total += gen_adjoint_eta0(out_root)
+    print("adjoint_w_scan …", flush=True)
+    total += gen_adjoint_w_scan(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 
