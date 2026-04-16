@@ -138,6 +138,96 @@ pub fn apply_weyl_shift(
     out
 }
 
+/// Result of refined Dehn filling (all paths: ℓ=1, ℓ≥2, multi-cusp).
+///
+/// Key structure:
+/// - ℓ=1: `(qq, 2·W_0, …, 2·W_{H-1})`
+/// - ℓ≥2: `(qq, 2·W_0, …, 2·W_{H-1}, 2·V_0)`
+/// - Multi-cusp: `(qq, 2·W_0, …, 2·W_{H-1}, 2·V_0, …, 2·V_{C-1})`
+#[derive(Debug, Clone)]
+pub struct FilledRefinedResult {
+    pub p: i64,
+    pub q: i64,
+    pub cusp_idx: i64, // -1 for multi-cusp
+    pub series: MultiEtaSeries,
+    pub qq_order: i32,
+    pub eta_order: i32,
+    pub hj_ks: Vec<i64>,
+    pub n_kernel_terms: usize,
+    pub num_hard: usize,
+    pub has_cusp_eta: bool,
+    pub num_cusp_eta: usize,
+}
+
+impl FilledRefinedResult {
+    /// Set η_j = 1 (W_j = 0) for hard-edge indices in `edges`.
+    ///
+    /// Zeros dimension 1+j in every key and sums colliding entries.
+    pub fn collapse_eta_edges(&self, edges: &[usize]) -> Self {
+        if edges.is_empty() {
+            return self.clone();
+        }
+        let zero = Rational64::from_integer(0);
+        let positions: Vec<usize> = edges.iter().map(|&j| 1 + j).collect();
+        let mut new_series = MultiEtaSeries::new();
+        for (key, &coeff) in &self.series {
+            if coeff == zero {
+                continue;
+            }
+            let mut nk = key.clone();
+            for &pos in &positions {
+                if pos < nk.len() {
+                    nk[pos] = 0;
+                }
+            }
+            let e = new_series.entry(nk).or_insert(zero);
+            *e += coeff;
+        }
+        new_series.retain(|_, v| *v != zero);
+        FilledRefinedResult {
+            series: new_series,
+            ..self.clone()
+        }
+    }
+
+    /// Set η_{V_ci} = 1 for cusp-η indices in `cusp_indices`.
+    ///
+    /// Zeros dimension `1 + num_hard + ci` and sums colliding entries.
+    pub fn collapse_cusp_etas(&self, cusp_indices: &[usize]) -> Self {
+        if cusp_indices.is_empty() || !self.has_cusp_eta {
+            return self.clone();
+        }
+        let zero = Rational64::from_integer(0);
+        let positions: Vec<usize> = cusp_indices
+            .iter()
+            .filter(|&&ci| ci < self.num_cusp_eta)
+            .map(|&ci| 1 + self.num_hard + ci)
+            .collect();
+        if positions.is_empty() {
+            return self.clone();
+        }
+        let mut new_series = MultiEtaSeries::new();
+        for (key, &coeff) in &self.series {
+            if coeff == zero {
+                continue;
+            }
+            let mut nk = key.clone();
+            for &pos in &positions {
+                if pos < nk.len() {
+                    nk[pos] = 0;
+                }
+            }
+            let e = new_series.entry(nk).or_insert(zero);
+            *e += coeff;
+        }
+        new_series.retain(|_, v| *v != zero);
+        FilledRefinedResult {
+            series: new_series,
+            ..self.clone()
+        }
+    }
+}
+
 /// Apply unrefined K(k,1; m, e) factor to a `MultiEtaSeries`.
 /// Only the qq dimension (first element) is shifted; η dims are untouched.
 pub fn apply_k1_factor_multi(

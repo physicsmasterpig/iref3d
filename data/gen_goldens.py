@@ -994,6 +994,69 @@ def gen_is_chain(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_multi_cusp(out_root: Path) -> int:
+    """Multi-cusp filling goldens: sequential filling of 2 cusps."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_dehn_filling import (
+        compute_multi_cusp_filled_refined_index,
+        MultiCuspFillSpec,
+    )
+
+    # s776 is the only multi-cusp manifold in our fixture (r=3)
+    targets = ["s776"]
+    # Test cases: (cusp0_P, cusp0_Q, cusp1_P, cusp1_Q)
+    fill_pairs = [
+        (3, 1, 2, 1),     # ℓ=1 + ℓ=1
+        (3, 1, 5, 1),     # ℓ=1 + ℓ=1, different slopes
+        (5, 2, 3, 1),     # ℓ≥2 + ℓ=1
+    ]
+    qq = 3
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r < 2:
+            continue
+
+        entry = {"name": name, "num_hard": int(nz.num_hard), "r": int(nz.r), "fills": []}
+        for (p0, q0, p1, q1) in fill_pairs:
+            print(f"  multi_cusp: {name} ({p0}/{q0},{p1}/{q1}) qq={qq} ...", flush=True)
+            specs = [
+                MultiCuspFillSpec(cusp_idx=0, P=p0, Q=q0),
+                MultiCuspFillSpec(cusp_idx=1, P=p1, Q=q1),
+            ]
+            res = compute_multi_cusp_filled_refined_index(nz, specs, q_order_half=qq, verbose=False)
+            series_dump = sorted(
+                [{"key": [int(x) for x in k],
+                  "coeff_num": int(v.numerator), "coeff_den": int(v.denominator)}
+                 for k, v in res.series.items()],
+                key=lambda d: d["key"],
+            )
+            entry["fills"].append({
+                "P0": p0, "Q0": q0, "cusp0": 0,
+                "P1": p1, "Q1": q1, "cusp1": 1,
+                "qq_order": qq,
+                "hj_ks": list(res.hj_ks),
+                "has_cusp_eta": bool(res.has_cusp_eta),
+                "num_cusp_eta": int(res.num_cusp_eta),
+                "series": series_dump,
+            })
+        cases.append(entry)
+    write_json(out_root / "refined_dehn" / "multi_cusp.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -1040,6 +1103,8 @@ def main() -> int:
     total += gen_refined_dehn(out_root)
     print("is_chain …", flush=True)
     total += gen_is_chain(out_root)
+    print("multi_cusp …", flush=True)
+    total += gen_multi_cusp(out_root)
 
     print(f"done: {total} cases written under {out_root}")
     return 0

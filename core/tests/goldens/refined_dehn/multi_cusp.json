@@ -1,0 +1,103 @@
+{
+  "cases": [
+    {
+      "fills": [
+        {
+          "P0": 3,
+          "P1": 2,
+          "Q0": 1,
+          "Q1": 1,
+          "cusp0": 0,
+          "cusp1": 1,
+          "has_cusp_eta": false,
+          "hj_ks": [
+            2
+          ],
+          "num_cusp_eta": 0,
+          "qq_order": 3,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "P0": 3,
+          "P1": 5,
+          "Q0": 1,
+          "Q1": 1,
+          "cusp0": 0,
+          "cusp1": 1,
+          "has_cusp_eta": false,
+          "hj_ks": [
+            5
+          ],
+          "num_cusp_eta": 0,
+          "qq_order": 3,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "P0": 5,
+          "P1": 3,
+          "Q0": 2,
+          "Q1": 1,
+          "cusp0": 0,
+          "cusp1": 1,
+          "has_cusp_eta": true,
+          "hj_ks": [
+            3
+          ],
+          "num_cusp_eta": 1,
+          "qq_order": 3,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "s776",
+      "num_hard": 0,
+      "r": 3
+    }
+  ]
+}

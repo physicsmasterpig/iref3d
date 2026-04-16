@@ -11,12 +11,12 @@ use crate::index_refined::{compute_refined_index, RefinedIndexResult};
 use crate::kernel::tet_index_series;
 use crate::refined_dehn::hj_cf::hj_continued_fraction;
 use crate::refined_dehn::multi_eta::{
-    apply_weyl_shift, collapse_iref_edges, MultiEtaSeries,
+    apply_weyl_shift, collapse_iref_edges, FilledRefinedResult, MultiEtaSeries,
 };
 use crate::summation::EnumerationState;
 
 /// IS kernel series: `(qq_power, eta_x2) → coefficient` (×2 scaled integers).
-type QEtaSeries = HashMap<(i32, i32), i64>;
+pub(crate) type QEtaSeries = HashMap<(i32, i32), i64>;
 
 /// Integer-valued multi-eta series for the IS chain hot path.
 type IntMultiSeries = HashMap<Vec<i64>, i64>;
@@ -214,7 +214,7 @@ fn etilde_is(
 /// Compute 2 × I_S(m1, e1, m2, e2; η) — the symplectic IS kernel, ×2 scaled.
 ///
 /// All e arguments in ×2 representation.
-fn is_kernel_x2(
+pub(crate) fn is_kernel_x2(
     m1: i64,
     e1_x2: i64,
     m2: i64,
@@ -269,7 +269,7 @@ fn is_kernel_x2(
 // ── Enumeration ──
 
 /// Enumerate ALL (m, e_x2, c, phase) for K(k, 1; m, e) — no symmetry shortcuts.
-fn enumerate_slope1_all(k: i64, t_range: i64) -> Vec<(i64, i64, i64, i64)> {
+pub(crate) fn enumerate_slope1_all(k: i64, t_range: i64) -> Vec<(i64, i64, i64, i64)> {
     let mut terms = Vec::new();
     let mut seen = hashbrown::HashSet::new();
 
@@ -292,7 +292,7 @@ fn enumerate_slope1_all(k: i64, t_range: i64) -> Vec<(i64, i64, i64, i64)> {
 }
 
 /// Enumerate the full (½)ℤ² lattice for intermediate IS steps.
-fn enumerate_is_full(m1_range: i64, e1_range: i64) -> Vec<(i64, i64)> {
+pub(crate) fn enumerate_is_full(m1_range: i64, e1_range: i64) -> Vec<(i64, i64)> {
     let mut terms = Vec::new();
     for m1 in -m1_range..=m1_range {
         for f1 in (-2 * e1_range)..=(2 * e1_range) {
@@ -545,21 +545,6 @@ fn refined_to_int_multi(refined: &RefinedIndexResult, append_cusp_eta: bool) -> 
 
 // ── Public API ──
 
-/// Result of ℓ≥2 refined Dehn filling.
-#[derive(Debug, Clone)]
-pub struct FilledRefinedChainResult {
-    pub p: i64,
-    pub q: i64,
-    pub cusp_idx: usize,
-    pub series: MultiEtaSeries,
-    pub qq_order: i32,
-    pub eta_order: i32,
-    pub hj_ks: Vec<i64>,
-    pub n_kernel_terms: usize,
-    pub num_hard: usize,
-    pub has_cusp_eta: bool,
-}
-
 /// Compute refined Dehn-filled index for ℓ≥2 slopes via IS chain.
 ///
 /// This is the direct-computation path (no pre-computed kernel cache).
@@ -575,7 +560,7 @@ pub fn compute_filled_refined_index_chain(
     incompat_edges: &[usize],
     weyl_a: Option<&[Rational64]>,
     weyl_b: Option<&[Rational64]>,
-) -> FilledRefinedChainResult {
+) -> FilledRefinedResult {
     let r = state.r;
     let hj_ks = hj_continued_fraction(p, q);
     let ell = hj_ks.len();
@@ -700,10 +685,10 @@ pub fn compute_filled_refined_index_chain(
         }
     }
 
-    FilledRefinedChainResult {
+    FilledRefinedResult {
         p,
         q,
-        cusp_idx,
+        cusp_idx: cusp_idx as i64,
         series: out_series,
         qq_order,
         eta_order,
@@ -711,6 +696,7 @@ pub fn compute_filled_refined_index_chain(
         n_kernel_terms: n_grid_terms,
         num_hard,
         has_cusp_eta: true,
+        num_cusp_eta: 1,
     }
 }
 

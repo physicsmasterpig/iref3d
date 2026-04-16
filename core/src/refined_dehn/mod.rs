@@ -3,5 +3,6 @@
 
 pub mod hj_cf;
 pub mod is_chain;
+pub mod multi_cusp;
 pub mod multi_eta;
 pub mod unrefined_kernel_path;

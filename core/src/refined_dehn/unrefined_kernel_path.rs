@@ -8,21 +8,9 @@ use crate::dehn::kernel_terms::{enumerate_kernel_terms, find_rs};
 use crate::index_refined::compute_refined_index;
 use crate::refined_dehn::multi_eta::{
     apply_k1_factor_multi, apply_weyl_shift, collapse_iref_edges, multi_add_inplace,
-    refined_to_multi, MultiEtaSeries,
+    refined_to_multi, FilledRefinedResult, MultiEtaSeries,
 };
 use crate::summation::EnumerationState;
-
-#[derive(Debug, Clone)]
-pub struct FilledRefinedResult {
-    pub p: i64,
-    pub q: i64,
-    pub cusp_idx: usize,
-    pub series: MultiEtaSeries,
-    pub qq_order: i32,
-    pub n_kernel_terms: usize,
-    pub num_hard: usize,
-    pub has_cusp_eta: bool,
-}
 
 fn make_ext(
     cusp_idx: usize,
@@ -137,11 +125,14 @@ pub fn compute_unrefined_kernel_refined_index(
     FilledRefinedResult {
         p,
         q,
-        cusp_idx,
+        cusp_idx: cusp_idx as i64,
         series: total,
         qq_order: q_order_half,
+        eta_order: 0,
+        hj_ks: vec![],
         n_kernel_terms: n_terms,
         num_hard,
         has_cusp_eta: false,
+        num_cusp_eta: 0,
     }
 }
