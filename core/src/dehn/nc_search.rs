@@ -2,8 +2,12 @@
 //!
 //! Ports v0.5's `_candidate_slopes` and `find_non_closable_cycles`
 //! from `dehn_filling.py`.
+//!
+//! The slope-by-slope computation is embarrassingly parallel and uses
+//! rayon when the slope count exceeds a threshold.
 
 use num_integer::Integer;
+use rayon::prelude::*;
 
 use crate::dehn::unrefined_fill::{compute_filled_index, FilledIndexResult};
 use crate::summation::EnumerationState;
@@ -57,7 +61,13 @@ pub fn candidate_slopes(
     slopes
 }
 
+/// Minimum number of slopes to trigger rayon parallelism.
+const RAYON_THRESHOLD: usize = 4;
+
 /// Search for non-closable cycles at `cusp_idx`.
+///
+/// Slopes are evaluated in parallel via rayon when the candidate count
+/// exceeds [`RAYON_THRESHOLD`].
 pub fn find_non_closable_cycles(
     state: &EnumerationState,
     cusp_idx: usize,
@@ -72,17 +82,40 @@ pub fn find_non_closable_cycles(
     let compute_slopes = candidate_slopes(p_range, q_range, use_symmetry);
     let all_set: hashbrown::HashSet<(i64, i64)> = all_slopes.iter().copied().collect();
 
+    // Compute filled index per slope — parallel when worthwhile.
+    let per_slope: Vec<((i64, i64), FilledIndexResult, bool)> =
+        if compute_slopes.len() >= RAYON_THRESHOLD {
+            compute_slopes
+                .par_iter()
+                .map(|&(p, q)| {
+                    let filled =
+                        compute_filled_index(state, cusp_idx, p, q, m_other, e_other_x2, q_order_half);
+                    let nc = filled.is_stably_zero(None);
+                    ((p, q), filled, nc)
+                })
+                .collect()
+        } else {
+            compute_slopes
+                .iter()
+                .map(|&(p, q)| {
+                    let filled =
+                        compute_filled_index(state, cusp_idx, p, q, m_other, e_other_x2, q_order_half);
+                    let nc = filled.is_stably_zero(None);
+                    ((p, q), filled, nc)
+                })
+                .collect()
+        };
+
+    // Assemble result (sequential — cheap).
     let mut result = NcSearchResult {
         cusp_idx,
         cycles: Vec::new(),
         slopes_tested: all_slopes,
-        series_data: hashbrown::HashMap::new(),
+        series_data: hashbrown::HashMap::with_capacity(per_slope.len()),
     };
 
     let mut computed: hashbrown::HashSet<(i64, i64)> = hashbrown::HashSet::new();
-    for &(p, q) in &compute_slopes {
-        let filled = compute_filled_index(state, cusp_idx, p, q, m_other, e_other_x2, q_order_half);
-        let nc = filled.is_stably_zero(None);
+    for ((p, q), filled, nc) in per_slope {
         computed.insert((p, q));
         if nc {
             result

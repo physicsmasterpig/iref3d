@@ -34,7 +34,7 @@ use crate::refined_dehn::multi_cusp::{
 use crate::refined_dehn::nc_compat::check_nc_compat;
 use crate::refined_dehn::unrefined_kernel_path::compute_unrefined_kernel_refined_index;
 use crate::summation::EnumerationState;
-use crate::weyl_symmetry::check_weyl_symmetry;
+use crate::weyl_symmetry::{check_weyl_symmetry, strip_weyl_monomial};
 
 // ── Wrapper types ──
 
@@ -493,6 +493,70 @@ fn nc_compat(
     Ok(dict.into_any().unbind())
 }
 
+/// Batch compute refined index for multiple (m_ext, e_ext_x2) points.
+///
+/// Shares the EnumerationState across all queries (same speedup as v0.5's
+/// compute_refined_index_batch).
+#[pyfunction]
+fn refined_index_batch(
+    py: Python<'_>,
+    data: &PyNzData,
+    queries: &Bound<'_, PyList>,
+    qq_order: i32,
+) -> PyResult<PyObject> {
+    let num_hard = data.nz.num_hard;
+    let results = PyList::empty(py);
+    for item in queries.iter() {
+        let tuple = item.cast::<PyTuple>()?;
+        let m_ext: Vec<i64> = tuple.get_item(0)?.extract()?;
+        let e_ext_x2: Vec<i64> = tuple.get_item(1)?.extract()?;
+        let result = compute_refined_index(&data.state, num_hard, &m_ext, &e_ext_x2, qq_order);
+        let d = refined_result_to_py(py, &result)?;
+        results.append(d)?;
+    }
+    Ok(results.into_any().unbind())
+}
+
+/// Factor the Weyl monomial out of a refined index entry.
+///
+/// Returns (centre, stripped) where centre[j] = -(a_j*e + b_j*m) as (num, den)
+/// and stripped is the Weyl-manifest series.
+#[pyfunction]
+fn strip_monomial(
+    py: Python<'_>,
+    entries: &Bound<'_, PyList>,
+    m_ext: Vec<i64>,
+    e_ext_x2: Vec<i64>,
+    num_hard: usize,
+) -> PyResult<PyObject> {
+    let (rust_entries, _) = entries_from_py(py, entries)?;
+    let ab = compute_ab_vectors(&rust_entries, num_hard);
+    let dict = PyDict::new(py);
+    match ab {
+        Some(ref ab_v) => {
+            // Find the entry matching (m_ext, e_ext_x2)
+            let target = rust_entries.iter().find(|e| e.m_ext == m_ext && e.e_ext_x2 == e_ext_x2);
+            if let Some(entry) = target {
+                let (centre, stripped) = strip_weyl_monomial(
+                    &entry.result, &m_ext, &e_ext_x2, ab_v, num_hard,
+                );
+                let centre_py: Vec<(i64, i64)> = centre.iter()
+                    .map(|v| (*v.numer(), *v.denom())).collect();
+                dict.set_item("centre", centre_py)?;
+                dict.set_item("stripped", refined_result_to_py(py, &stripped)?)?;
+            } else {
+                dict.set_item("centre", py.None())?;
+                dict.set_item("stripped", py.None())?;
+            }
+        }
+        None => {
+            dict.set_item("centre", py.None())?;
+            dict.set_item("stripped", py.None())?;
+        }
+    }
+    Ok(dict.into_any().unbind())
+}
+
 /// Clear the tetrahedron index cache.
 #[pyfunction]
 fn clear_cache() {
@@ -517,6 +581,8 @@ fn iref3d_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(filled_refined_index, m)?)?;
     m.add_function(wrap_pyfunction!(multi_cusp_filled_refined_index, m)?)?;
     m.add_function(wrap_pyfunction!(nc_compat, m)?)?;
+    m.add_function(wrap_pyfunction!(refined_index_batch, m)?)?;
+    m.add_function(wrap_pyfunction!(strip_monomial, m)?)?;
     m.add_function(wrap_pyfunction!(clear_cache, m)?)?;
     Ok(())
 }
