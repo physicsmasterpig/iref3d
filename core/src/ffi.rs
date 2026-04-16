@@ -638,6 +638,59 @@ fn clear_disk_cache() -> PyResult<(usize, usize)> {
     Ok((k, i))
 }
 
+// ── C extension drop-in replacements ──
+// These 3 functions match the v0.5 C extension API exactly, so the Rust
+// dylib can replace `_c_kernel/_c_tet_index.so` as a drop-in.
+
+/// Tetrahedron index series: (m, e, qq_order) → dict[int, int].
+#[pyfunction]
+fn tet_index_series(py: Python<'_>, m: i32, e: i32, qq_order: i32) -> PyResult<PyObject> {
+    let series = crate::kernel::tet_index_series(m, e, qq_order);
+    let dict = PyDict::new(py);
+    for (&k, &v) in &series {
+        if v != 0 {
+            dict.set_item(k, v)?;
+        }
+    }
+    Ok(dict.into_any().unbind())
+}
+
+/// 2 × tetrahedron degree.
+#[pyfunction]
+fn tet_degree_x2(m: i32, e: i32) -> i32 {
+    crate::kernel::tet_degree_x2(m, e)
+}
+
+/// Sparse polynomial convolution with budget cutoff.
+/// dict[int, int] × dict[int, int] → dict[int, int].
+#[pyfunction]
+fn poly_convolve(py: Python<'_>, a: &Bound<'_, PyDict>, b: &Bound<'_, PyDict>, budget: i32) -> PyResult<PyObject> {
+    let mut sa = crate::poly::QSeries::new();
+    for (k, v) in a.iter() {
+        let ki: i32 = k.extract()?;
+        let vi: i64 = v.extract()?;
+        if vi != 0 {
+            sa.insert(ki, vi);
+        }
+    }
+    let mut sb = crate::poly::QSeries::new();
+    for (k, v) in b.iter() {
+        let ki: i32 = k.extract()?;
+        let vi: i64 = v.extract()?;
+        if vi != 0 {
+            sb.insert(ki, vi);
+        }
+    }
+    let result = crate::poly::convolve(&sa, &sb, budget);
+    let dict = PyDict::new(py);
+    for (&k, &v) in &result {
+        if v != 0 {
+            dict.set_item(k, v)?;
+        }
+    }
+    Ok(dict.into_any().unbind())
+}
+
 // ── Module registration ──
 
 #[pymodule]
@@ -663,5 +716,9 @@ fn iref3d_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(cache_dir, m)?)?;
     m.add_function(wrap_pyfunction!(kernel_cache_list, m)?)?;
     m.add_function(wrap_pyfunction!(clear_disk_cache, m)?)?;
+    // C extension drop-in replacements
+    m.add_function(wrap_pyfunction!(tet_index_series, m)?)?;
+    m.add_function(wrap_pyfunction!(tet_degree_x2, m)?)?;
+    m.add_function(wrap_pyfunction!(poly_convolve, m)?)?;
     Ok(())
 }
