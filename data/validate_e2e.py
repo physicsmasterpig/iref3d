@@ -97,14 +97,9 @@ def refined_rust_to_dict(result: dict) -> dict:
 
 
 def check_num_hard_match(name, nz_v05, nz_rust) -> bool:
-    """Verify v0.5 and fixture DB agree on num_hard (phase space basis).
-
-    If they differ, the refined index keys will have different tuple lengths,
-    so comparison is meaningless. The golden tests already cover those cases.
-    """
+    """Verify v0.5 and Rust agree on num_hard."""
     if nz_v05.num_hard != nz_rust.num_hard:
-        print(f"  SKIP  {name}: num_hard differs (v05={nz_v05.num_hard}, "
-              f"fixture={nz_rust.num_hard}) — basis mismatch, covered by golden tests")
+        print(f"  WARN  {name}: num_hard v05={nz_v05.num_hard} rust={nz_rust.num_hard}")
         return False
     return True
 

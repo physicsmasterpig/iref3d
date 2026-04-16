@@ -58,6 +58,10 @@ impl PyNzData {
     }
     #[getter]
     fn num_hard(&self) -> usize {
+        self.nz.num_hard
+    }
+    #[getter]
+    fn n_int(&self) -> usize {
         self.state.n_int
     }
 }
@@ -156,7 +160,7 @@ fn refined_index(
     e_ext_x2: Vec<i64>,
     qq_order: i32,
 ) -> PyResult<PyObject> {
-    let result = compute_refined_index(&data.state, data.state.n_int, &m_ext, &e_ext_x2, qq_order);
+    let result = compute_refined_index(&data.state, data.nz.num_hard, &m_ext, &e_ext_x2, qq_order);
     refined_result_to_py(py, &result)
 }
 
@@ -378,7 +382,7 @@ fn filled_refined_index(
     let m_o = m_other.unwrap_or_else(|| vec![0i64; n_cusps - 1]);
     let e_o = e_other_x2.unwrap_or_else(|| vec![0i64; n_cusps - 1]);
     let ie = incompat_edges.unwrap_or_default();
-    let num_hard = data.state.n_int;
+    let num_hard = data.nz.num_hard;
 
     let hj_ks = crate::refined_dehn::hj_cf::hj_continued_fraction(p, q);
     let result = if hj_ks.len() >= 2 {
@@ -420,7 +424,7 @@ fn multi_cusp_filled_refined_index(
     fill_specs: &Bound<'_, PyList>,
     qq_order: i32,
 ) -> PyResult<PyObject> {
-    let num_hard = data.state.n_int;
+    let num_hard = data.nz.num_hard;
     let mut specs = Vec::new();
     for item in fill_specs.iter() {
         let d = item.cast::<PyDict>()?;
@@ -467,7 +471,7 @@ fn nc_compat(
     cusp_idx: usize,
     qq_order: i32,
 ) -> PyResult<PyObject> {
-    let num_hard = data.state.n_int;
+    let num_hard = data.nz.num_hard;
     let result = check_nc_compat(&data.nz, p, q, cusp_idx, num_hard, qq_order);
 
     let dict = PyDict::new(py);
