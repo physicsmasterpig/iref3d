@@ -18,6 +18,7 @@ pub mod index_unrefined;
 pub mod index_refined;
 pub mod ab_vectors;
 pub mod weyl_symmetry;
+pub mod adjoint_unrefined;
 
 // Upcoming modules (stubbed in the plan, not yet implemented):
 //

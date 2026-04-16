@@ -586,6 +586,56 @@ def gen_weyl_symmetry(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_adjoint_unrefined(out_root: Path) -> int:
+    """Marginal-check goldens: unrefined q^1 projection at e ∈ {-2,-1,1,2}."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.index_3d import compute_index_3d_python
+
+    targets = ["m003", "m004", "m006", "s776", "3_1", "K3a1"]
+    qq = 10
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        n_cusps = nz.r
+        entry = {"name": name, "num_cusps": n_cusps, "qq_order": qq, "per_cusp": []}
+        for cusp_idx in range(n_cusps):
+            c_e = {}
+            for e_val in [Fraction(-2), Fraction(-1), Fraction(1), Fraction(2)]:
+                m_ext_s = [0] * n_cusps
+                e_ext_s = [Fraction(0)] * n_cusps
+                e_ext_s[cusp_idx] = e_val
+                r3d = compute_index_3d_python(nz, m_ext_s, e_ext_s, qq)
+                idx = 2 - r3d.min_power
+                q1 = r3d.coeffs[idx] if 0 <= idx < len(r3d.coeffs) else 0
+                c_e[int(e_val * 2)] = int(q1)
+            num = c_e[-2] + c_e[2] - c_e[-4] - c_e[4]
+            if num % 2 != 0:
+                proj, marginal = None, None
+            else:
+                proj = num // 2
+                marginal = (proj >= 0)
+            entry["per_cusp"].append({
+                "cusp_idx": cusp_idx,
+                "c_e_x2": sorted(c_e.items()),
+                "unrefined_q1_proj": proj,
+                "is_marginal": marginal,
+            })
+        cases.append(entry)
+    write_json(out_root / "adjoint_unrefined" / "results.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -620,6 +670,8 @@ def main() -> int:
     total += gen_ab_vectors(out_root)
     print("weyl_symmetry …", flush=True)
     total += gen_weyl_symmetry(out_root)
+    print("adjoint_unrefined …", flush=True)
+    total += gen_adjoint_unrefined(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 

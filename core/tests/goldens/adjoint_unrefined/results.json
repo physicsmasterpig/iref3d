@@ -1,0 +1,230 @@
+{
+  "cases": [
+    {
+      "name": "m003",
+      "num_cusps": 1,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": false,
+          "unrefined_q1_proj": -1
+        }
+      ],
+      "qq_order": 10
+    },
+    {
+      "name": "m004",
+      "num_cusps": 1,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              -1
+            ],
+            [
+              -2,
+              -2
+            ],
+            [
+              2,
+              -2
+            ],
+            [
+              4,
+              -1
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": false,
+          "unrefined_q1_proj": -1
+        }
+      ],
+      "qq_order": 10
+    },
+    {
+      "name": "m006",
+      "num_cusps": 1,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              -2
+            ],
+            [
+              2,
+              -2
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": false,
+          "unrefined_q1_proj": -2
+        }
+      ],
+      "qq_order": 10
+    },
+    {
+      "name": "s776",
+      "num_cusps": 3,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": false,
+          "unrefined_q1_proj": -1
+        },
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 1,
+          "is_marginal": false,
+          "unrefined_q1_proj": -1
+        },
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              -1
+            ],
+            [
+              2,
+              -1
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 2,
+          "is_marginal": false,
+          "unrefined_q1_proj": -1
+        }
+      ],
+      "qq_order": 10
+    },
+    {
+      "name": "3_1",
+      "num_cusps": 1,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": true,
+          "unrefined_q1_proj": 0
+        }
+      ],
+      "qq_order": 10
+    },
+    {
+      "name": "K3a1",
+      "num_cusps": 1,
+      "per_cusp": [
+        {
+          "c_e_x2": [
+            [
+              -4,
+              0
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "cusp_idx": 0,
+          "is_marginal": true,
+          "unrefined_q1_proj": 0
+        }
+      ],
+      "qq_order": 10
+    }
+  ]
+}
