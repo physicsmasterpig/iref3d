@@ -44,7 +44,7 @@ pub fn find_rs(p: i64, q: i64) -> (i64, i64) {
 }
 
 /// Particular solution `(m0, 2·e0)` to `P·m0 + 2Q·e0 = c`.
-fn particular_solution(p: i64, q: i64, c: i64) -> (i64, i64) {
+pub(crate) fn particular_solution(p: i64, q: i64, c: i64) -> (i64, i64) {
     let (_, x, y) = ext_gcd(p, q);
     // P·(c·x) + Q·(c·y) = c  ⇒  m0 = c·x, f0 = c·y, e0 = f0/2.
     // Store 2·e0 = c·y to stay integer.

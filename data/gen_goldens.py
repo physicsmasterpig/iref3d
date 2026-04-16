@@ -937,6 +937,63 @@ def gen_refined_dehn(out_root: Path) -> int:
     return len(hj_cases) + len(fill_cases)
 
 
+def gen_is_chain(out_root: Path) -> int:
+    """IS chain goldens: ℓ≥2 refined Dehn filling via compute_filled_refined_index."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_dehn_filling import (
+        compute_filled_refined_index,
+    )
+
+    targets = ["m003", "m004"]
+    # ℓ≥2 slopes (|Q|>1) at small qq for feasibility
+    slopes = [(5, 2), (7, 3), (-3, 2)]
+    qq = 6
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entry = {"name": name, "num_hard": int(nz.num_hard), "fills": []}
+        for (P, Q) in slopes:
+            from math import gcd as _gcd
+            if _gcd(abs(P), abs(Q)) != 1:
+                continue
+            print(f"  IS chain: {name} P={P} Q={Q} qq={qq} ...", flush=True)
+            res = compute_filled_refined_index(
+                nz, 0, P, Q, q_order_half=qq, verbose=False,
+            )
+            series_dump = sorted(
+                [{"key": [int(x) for x in k],
+                  "coeff_num": int(v.numerator), "coeff_den": int(v.denominator)}
+                 for k, v in res.series.items()],
+                key=lambda d: d["key"],
+            )
+            entry["fills"].append({
+                "P": P, "Q": Q,
+                "qq_order": qq,
+                "hj_ks": list(res.hj_ks),
+                "n_kernel_terms": int(res.n_kernel_terms),
+                "has_cusp_eta": bool(res.has_cusp_eta),
+                "eta_order": int(res.eta_order),
+                "series": series_dump,
+            })
+        cases.append(entry)
+    write_json(out_root / "refined_dehn" / "is_chain.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -981,8 +1038,8 @@ def main() -> int:
     total += gen_dehn_filling(out_root)
     print("refined_dehn …", flush=True)
     total += gen_refined_dehn(out_root)
-    # future modules: gen_nz, gen_summation, gen_index, gen_refined,
-    # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
+    print("is_chain …", flush=True)
+    total += gen_is_chain(out_root)
 
     print(f"done: {total} cases written under {out_root}")
     return 0
