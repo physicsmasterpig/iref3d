@@ -82,7 +82,7 @@ fn adjoint_eta0_matches_v05() {
             num_hard: case.num_hard,
             warnings: vec![],
         };
-        let got = check_adjoint_projection(&entries, case.num_hard, Some(&ab), case.cusp_idx);
+        let got = check_adjoint_projection(&entries, case.num_hard, Some(&ab), case.cusp_idx, None);
         let mut got_ce = got.c_e_x2.clone();
         got_ce.sort();
         let want_ce: Vec<(i64, i64)> = case.c_e_x2.iter().map(|p| (p[0], p[1])).collect();

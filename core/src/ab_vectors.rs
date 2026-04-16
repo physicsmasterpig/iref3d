@@ -59,6 +59,45 @@ impl ABVectors {
             .map(|(aa, bb)| aa && bb)
             .collect()
     }
+
+    /// Indices of incompatible edges (where `a[j] ∉ ℤ` or `2·b[j] ∉ ℤ`).
+    pub fn incompat_edges(&self) -> Vec<usize> {
+        self.edge_compatible()
+            .into_iter()
+            .enumerate()
+            .filter(|&(_, ok)| !ok)
+            .map(|(j, _)| j)
+            .collect()
+    }
+
+    /// Return a copy with incompatible edges zeroed out.
+    ///
+    /// For each hard edge j where `edge_compatible[j]` is false,
+    /// sets `a[j] = 0` and `b[j] = 0` (i.e., η_j = 1 during filling).
+    pub fn make_filling_compatible(&self) -> Self {
+        let mask = self.edge_compatible();
+        let zero = Rational64::from_integer(0);
+        let a_new: Vec<_> = (0..self.num_hard)
+            .map(|j| if mask[j] { self.a[j] } else { zero })
+            .collect();
+        let b_new: Vec<_> = (0..self.num_hard)
+            .map(|j| if mask[j] { self.b[j] } else { zero })
+            .collect();
+        let mut warnings = self.warnings.clone();
+        let zeroed: Vec<_> = (0..self.num_hard).filter(|&j| !mask[j]).collect();
+        if !zeroed.is_empty() {
+            warnings.push(format!(
+                "Edges {:?} incompatible with half-integer e; set η_j=1 for filling",
+                zeroed
+            ));
+        }
+        ABVectors {
+            a: a_new,
+            b: b_new,
+            num_hard: self.num_hard,
+            warnings,
+        }
+    }
 }
 
 /// Coefficient-weighted centre of η-exponents at leading q-half-power.

@@ -24,11 +24,18 @@ pub struct AdjointResult {
 /// Extract the (q¹, η⁰) coefficient from a Weyl-shifted result.
 ///
 /// η⁰ after shifting by +`shift_x2` corresponds to raw-η = −`shift_x2`.
+///
+/// For **collapsed edges** (incompatible with Dehn filling, W_j turned off),
+/// we sum over ALL η_j powers instead of extracting just η_j^0.
 fn extract_q1_eta0_shifted(
     result: &crate::index_refined::RefinedIndexResult,
     num_hard: usize,
     shift_x2: &[i64],
+    collapsed_edges: Option<&hashbrown::HashSet<usize>>,
 ) -> i64 {
+    let empty_set = hashbrown::HashSet::new();
+    let collapsed = collapsed_edges.unwrap_or(&empty_set);
+
     let mut coeff = 0i64;
     for (k, &v) in result.iter() {
         if v == 0 || k[0] != 2 {
@@ -36,6 +43,9 @@ fn extract_q1_eta0_shifted(
         }
         let mut ok = true;
         for h in 0..num_hard {
+            if collapsed.contains(&h) {
+                continue; // sum over all η_h values
+            }
             if k[1 + h] != -shift_x2[h] {
                 ok = false;
                 break;
@@ -54,6 +64,7 @@ pub fn check_adjoint_projection(
     num_hard: usize,
     ab: Option<&ABVectors>,
     cusp_idx: usize,
+    collapsed_edges: Option<&hashbrown::HashSet<usize>>,
 ) -> AdjointResult {
     let mut c_e_x2: Vec<(i64, i64)> = Vec::new();
     fn lookup(v: &[(i64, i64)], ex2: i64) -> Option<usize> {
@@ -83,7 +94,7 @@ pub fn check_adjoint_projection(
         } else {
             vec![0; num_hard]
         };
-        let c = extract_q1_eta0_shifted(&e.result, num_hard, &shift_x2);
+        let c = extract_q1_eta0_shifted(&e.result, num_hard, &shift_x2, collapsed_edges);
         let key = e.e_ext_x2[cusp_idx];
         match lookup(&c_e_x2, key) {
             Some(pos) => c_e_x2[pos].1 += c,
@@ -145,6 +156,7 @@ pub fn check_adjoint_projection_multi_cusp(
     num_hard: usize,
     ab: Option<&ABVectors>,
     filled_cusp_indices: &[usize],
+    collapsed_edges: Option<&hashbrown::HashSet<usize>>,
 ) -> MultiCuspAdjointResult {
     if filled_cusp_indices.is_empty() {
         return MultiCuspAdjointResult {
@@ -182,7 +194,7 @@ pub fn check_adjoint_projection_multi_cusp(
         } else {
             vec![0; num_hard]
         };
-        let c = extract_q1_eta0_shifted(&e.result, num_hard, &shift_x2);
+        let c = extract_q1_eta0_shifted(&e.result, num_hard, &shift_x2, collapsed_edges);
         *c_e.entry(key).or_insert(0) += c;
     }
 

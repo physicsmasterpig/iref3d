@@ -29,6 +29,10 @@ type FracISState = HashMap<(i64, i64), MultiEtaSeries>;
 /// Intermediate from a previous filling: `(m_next, e_next_x2) → MultiEtaSeries`.
 type Intermediate = HashMap<(i64, i64), MultiEtaSeries>;
 
+/// Multi-spectator intermediate: keys are vectors of `(m, e_x2)` tuples,
+/// one per remaining cusp (in fill order). Used for n_fills ≥ 3.
+type MultiSpectIntermediate = HashMap<Vec<(i64, i64)>, MultiEtaSeries>;
+
 /// Specification for filling one cusp in a multi-cusp filling.
 #[derive(Debug, Clone)]
 pub struct MultiCuspFillSpec {
@@ -551,16 +555,220 @@ fn needed_spectator_charges(
     }
 }
 
+// ── Multi-spectator helpers (n_fills ≥ 3) ──
+
+/// Batched first filling with multiple spectator cusps.
+///
+/// Computes single-cusp filling for `first` while iterating over all charge
+/// combinations for `remaining_cusp_indices`.  Returns a multi-spectator
+/// intermediate whose keys have length `remaining_cusp_indices.len()`.
+fn batched_first_filling_general(
+    state: &EnumerationState,
+    first: &MultiCuspFillSpec,
+    remaining_cusp_indices: &[usize],
+    qq_order: i32,
+    num_hard: usize,
+) -> (MultiSpectIntermediate, usize) {
+    let r = state.r;
+    let cusp_idx = first.cusp_idx;
+    let hj_ks = hj_continued_fraction(first.p, first.q);
+    let ell = hj_ks.len();
+
+    let (wa, wb) = if let (Some(a), Some(b)) = (&first.weyl_a, &first.weyl_b) {
+        let mut a = a.clone();
+        let mut b = b.clone();
+        let zero_r = Rational64::from_integer(0);
+        for &j in &first.incompat_edges {
+            if j < a.len() { a[j] = zero_r; }
+            if j < b.len() { b[j] = zero_r; }
+        }
+        (Some(a), Some(b))
+    } else {
+        (None, None)
+    };
+
+    let is_buffer = qq_order + 4;
+    let qq_for_range = if ell >= 2 { qq_order + is_buffer } else { qq_order };
+    let m_scan = 2 * qq_for_range as i64;
+    let e_scan = qq_for_range as i64;
+
+    // Position mapping: remaining cusp → position in m_other/e_other (length r−1)
+    let cusp_to_other: Vec<usize> = remaining_cusp_indices
+        .iter()
+        .map(|&ci| if ci < cusp_idx { ci } else { ci - 1 })
+        .collect();
+
+    // Per-cusp probing to find active charges (ℓ≥2 optimisation)
+    let active_per_cusp: Vec<Vec<(i64, i64)>> = if ell >= 2 {
+        remaining_cusp_indices
+            .iter()
+            .map(|&ci| {
+                let mut active = Vec::new();
+                for m in -m_scan..=m_scan {
+                    for e_half in (-2 * e_scan)..=(2 * e_scan) {
+                        let mut m_ext = vec![0i64; r];
+                        let mut e_ext = vec![0i64; r];
+                        m_ext[ci] = m;
+                        e_ext[ci] = e_half;
+                        let refined =
+                            compute_refined_index(state, num_hard, &m_ext, &e_ext, qq_for_range);
+                        if !refined.is_empty() {
+                            active.push((m, e_half));
+                        }
+                    }
+                }
+                active
+            })
+            .collect()
+    } else {
+        remaining_cusp_indices
+            .iter()
+            .map(|_| {
+                let mut charges = Vec::new();
+                for m in -m_scan..=m_scan {
+                    for e_half in (-2 * e_scan)..=(2 * e_scan) {
+                        charges.push((m, e_half));
+                    }
+                }
+                charges
+            })
+            .collect()
+    };
+
+    // Build Cartesian product of per-cusp active charges
+    let mut combos: Vec<Vec<(i64, i64)>> = vec![vec![]];
+    for charges in &active_per_cusp {
+        let mut new_combos = Vec::with_capacity(combos.len() * charges.len());
+        for combo in &combos {
+            for &charge in charges {
+                let mut c = combo.clone();
+                c.push(charge);
+                new_combos.push(c);
+            }
+        }
+        combos = new_combos;
+    }
+
+    let mut intermediate = MultiSpectIntermediate::new();
+
+    for combo in &combos {
+        let mut m_other = vec![0i64; r - 1];
+        let mut e_other_x2 = vec![0i64; r - 1];
+        for (i, &(m, e)) in combo.iter().enumerate() {
+            m_other[cusp_to_other[i]] = m;
+            e_other_x2[cusp_to_other[i]] = e;
+        }
+
+        let result = if ell >= 2 {
+            crate::refined_dehn::is_chain::compute_filled_refined_index_chain(
+                state,
+                num_hard,
+                cusp_idx,
+                first.p,
+                first.q,
+                &m_other,
+                &e_other_x2,
+                qq_order,
+                &first.incompat_edges,
+                wa.as_deref(),
+                wb.as_deref(),
+            )
+        } else {
+            crate::refined_dehn::unrefined_kernel_path::compute_unrefined_kernel_refined_index(
+                state,
+                num_hard,
+                cusp_idx,
+                first.p,
+                first.q,
+                &m_other,
+                &e_other_x2,
+                qq_order,
+                &first.incompat_edges,
+                wa.as_deref(),
+                wb.as_deref(),
+            )
+        };
+
+        if !result.series.is_empty() {
+            let series = if !first.incompat_edges.is_empty() {
+                result.collapse_eta_edges(&first.incompat_edges).series
+            } else {
+                result.series
+            };
+            if !series.is_empty() {
+                intermediate.insert(combo.clone(), series);
+            }
+        }
+    }
+
+    let num_cusp_eta = if ell >= 2 { 1 } else { 0 };
+    (intermediate, num_cusp_eta)
+}
+
+/// Apply one filling step to a multi-spectator intermediate, peeling off the
+/// first spectator dimension.
+///
+/// Groups entries by suffix `keys[1..]`, applies the filling kernel to each
+/// group (keyed by `keys[0]`), and produces a new intermediate with keys one
+/// element shorter.
+fn apply_filling_step(
+    multi_intermediate: &MultiSpectIntermediate,
+    fill_spec: &MultiCuspFillSpec,
+    qq_order: i32,
+    num_hard: usize,
+    num_cusp_eta_in: usize,
+) -> (MultiSpectIntermediate, usize) {
+    // Group by suffix (all key elements except the first)
+    let mut grouped: HashMap<Vec<(i64, i64)>, Intermediate> = HashMap::new();
+    for (key, series) in multi_intermediate {
+        let suffix = key[1..].to_vec();
+        let first_charge = key[0];
+        grouped
+            .entry(suffix)
+            .or_insert_with(Intermediate::new)
+            .insert(first_charge, series.clone());
+    }
+
+    let mut new_intermediate = MultiSpectIntermediate::new();
+    let mut num_cusp_eta_out = num_cusp_eta_in;
+
+    for (suffix, flat_intermediate) in &grouped {
+        let result = apply_filling_kernel_to_intermediate(
+            flat_intermediate,
+            fill_spec.p,
+            fill_spec.q,
+            qq_order,
+            num_hard,
+            num_cusp_eta_in,
+        );
+
+        let series = if !fill_spec.incompat_edges.is_empty() {
+            result.collapse_eta_edges(&fill_spec.incompat_edges).series
+        } else {
+            result.series
+        };
+
+        if !series.is_empty() {
+            new_intermediate.insert(suffix.clone(), series);
+        }
+
+        num_cusp_eta_out = result.num_cusp_eta;
+    }
+
+    (new_intermediate, num_cusp_eta_out)
+}
+
 // ── Public API ──
 
 /// Sequentially fill multiple cusps of a manifold.
 ///
 /// Fills cusps one at a time.  After filling cusp j, the intermediate
-/// result maps `(m, e_x2)` of the next cusp to `MultiEtaSeries`.
+/// result maps spectator charges of the remaining cusps to `MultiEtaSeries`.
 /// The next filling applies its kernel to that intermediate.
 ///
-/// Currently supports `n_fills ≤ 2`.  For `n_fills == 1` delegates
-/// directly to the single-cusp path.
+/// For `n_fills == 1`, delegates directly to the single-cusp path.
+/// For `n_fills == 2`, uses the optimised `batched_first_filling` path.
+/// For `n_fills ≥ 3`, uses the general multi-spectator algorithm.
 pub fn compute_multi_cusp_filled_refined_index(
     state: &EnumerationState,
     num_hard: usize,
@@ -604,35 +812,73 @@ pub fn compute_multi_cusp_filled_refined_index(
         };
     }
 
-    // Multi-cusp (n_fills == 2): sequential filling
-    assert!(
-        n_fills == 2,
-        "n_fills > 2 not yet supported (v0.5 intermediate restructuring needed)"
-    );
+    // n_fills == 2: optimised path with single spectator cusp
+    if n_fills == 2 {
+        let first = &fill_specs[0];
+        let second = &fill_specs[1];
+        let next_cusp = second.cusp_idx;
 
-    let first = &fill_specs[0];
-    let second = &fill_specs[1];
-    let next_cusp = second.cusp_idx;
+        let needed_me = needed_spectator_charges(second.p, second.q, qq_order);
+        let (intermediate, num_cusp_eta_accum) =
+            batched_first_filling(state, first, next_cusp, &needed_me, qq_order, num_hard);
 
-    // Step 1: determine what charges the second filling needs
-    let needed_me = needed_spectator_charges(second.p, second.q, qq_order);
+        let result = apply_filling_kernel_to_intermediate(
+            &intermediate,
+            second.p,
+            second.q,
+            qq_order,
+            num_hard,
+            num_cusp_eta_accum,
+        );
 
-    // Step 2: batched first filling
-    let (intermediate, num_cusp_eta_accum) =
-        batched_first_filling(state, first, next_cusp, &needed_me, qq_order, num_hard);
+        return if !second.incompat_edges.is_empty() {
+            result.collapse_eta_edges(&second.incompat_edges)
+        } else {
+            result
+        };
+    }
 
-    // Step 3: apply second filling kernel to intermediate
+    // n_fills ≥ 3: general multi-spectator algorithm
+    let remaining_cusps: Vec<usize> = fill_specs[1..].iter().map(|s| s.cusp_idx).collect();
+
+    // Step 1: batched first filling with all remaining cusps as spectators
+    let (mut multi_intermediate, mut num_cusp_eta) =
+        batched_first_filling_general(state, &fill_specs[0], &remaining_cusps, qq_order, num_hard);
+
+    // Steps 2..n-1: apply intermediate fillings, peeling off one spectator per step
+    for i in 1..(n_fills - 1) {
+        let (new_multi, new_cusp_eta) = apply_filling_step(
+            &multi_intermediate,
+            &fill_specs[i],
+            qq_order,
+            num_hard,
+            num_cusp_eta,
+        );
+        multi_intermediate = new_multi;
+        num_cusp_eta = new_cusp_eta;
+    }
+
+    // Step n: final filling — multi-spectator keys should now have length 1
+    let flat_intermediate: Intermediate = multi_intermediate
+        .into_iter()
+        .map(|(k, v)| {
+            debug_assert_eq!(k.len(), 1, "expected single-element key at final step");
+            (k[0], v)
+        })
+        .collect();
+
+    let last = &fill_specs[n_fills - 1];
     let result = apply_filling_kernel_to_intermediate(
-        &intermediate,
-        second.p,
-        second.q,
+        &flat_intermediate,
+        last.p,
+        last.q,
         qq_order,
         num_hard,
-        num_cusp_eta_accum,
+        num_cusp_eta,
     );
 
-    if !second.incompat_edges.is_empty() {
-        result.collapse_eta_edges(&second.incompat_edges)
+    if !last.incompat_edges.is_empty() {
+        result.collapse_eta_edges(&last.incompat_edges)
     } else {
         result
     }

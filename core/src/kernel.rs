@@ -2,11 +2,26 @@
 //!
 //! Public functions:
 //!   - [`tet_degree_x2`] — 2·δ(m,e), integer arithmetic.
-//!   - [`tet_index_series`] — full MIt(m,e) sparse q^½ series.
+//!   - [`tet_index_series`] — full MIt(m,e) sparse q^½ series (memoized).
 //!
 //! Results must be bit-identical to the Python/C reference.
 
+use std::sync::RwLock;
+
 use crate::poly::QSeries;
+
+/// In-memory cache for `tet_index_series` results.
+///
+/// Key = `(m, e, qq_order)`, value = sparse QSeries.
+/// Matches v0.5's module-level `_tet_cache` dict.
+static TET_CACHE: RwLock<Option<hashbrown::HashMap<(i32, i32, i32), QSeries>>> =
+    RwLock::new(None);
+
+/// Clear the tet cache (e.g. when switching manifolds with different parameters).
+pub fn clear_tet_cache() {
+    let mut cache = TET_CACHE.write().unwrap();
+    *cache = None;
+}
 
 /// `2 · δ(m, e)` — doubled tetrahedron degree as a plain integer.
 ///
@@ -131,12 +146,40 @@ fn it_direct(mm: i32, ee: i32, inner_order: usize) -> Vec<i64> {
 ///
 /// Port of `py_tet_index_series` in `tet_index.c`. Returns the coefficient map
 /// `{power → coeff}` with all zeros removed.
+///
+/// Results are memoized in a global cache keyed by `(m, e, qq_order)`.
 pub fn tet_index_series(m: i32, e: i32, qq_order: i32) -> QSeries {
     if qq_order < 0 {
         return QSeries::new();
     }
+
+    // Check cache (read lock)
+    let key = (m, e, qq_order);
+    {
+        let cache = TET_CACHE.read().unwrap();
+        if let Some(map) = cache.as_ref() {
+            if let Some(cached) = map.get(&key) {
+                return cached.clone();
+            }
+        }
+    }
+
+    // Compute
+    let result = tet_index_series_uncached(m, e, qq_order);
+
+    // Store in cache (write lock)
+    {
+        let mut cache = TET_CACHE.write().unwrap();
+        let map = cache.get_or_insert_with(hashbrown::HashMap::new);
+        map.insert(key, result.clone());
+    }
+
+    result
+}
+
+/// Uncached implementation of `tet_index_series`.
+fn tet_index_series_uncached(m: i32, e: i32, qq_order: i32) -> QSeries {
     let (raw, raw_len, shift, sign_m) = if m + e >= 0 {
-        // MIt(m,e) = (-qq)^m * I_t(-m-e, m); need raw keys up to qq_order - m.
         let inner_order = (qq_order - m).max(0) as usize;
         let raw = it_direct(-m - e, m, inner_order);
         let sign_m: i64 = if m.rem_euclid(2) == 0 { 1 } else { -1 };

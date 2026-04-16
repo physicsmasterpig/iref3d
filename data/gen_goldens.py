@@ -1057,6 +1057,172 @@ def gen_multi_cusp(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_nc_compat(out_root: Path) -> int:
+    """NC-cycle compatibility check goldens (basis-change + Weyl recheck)."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import (
+        build_neumann_zagier,
+        apply_general_cusp_basis_change,
+    )
+    from manifold_index.core.dehn_filling import find_rs
+    from manifold_index.core.refined_index import compute_refined_index
+    from manifold_index.core.weyl_check import (
+        compute_ab_vectors,
+        check_adjoint_projection,
+        run_weyl_checks,
+    )
+    from manifold_index.core.index_3d import compute_index_3d_python
+
+    # Single-cusp manifolds with known NC slopes
+    targets = [
+        ("m003", [(3, 1), (5, 2), (1, 1)]),
+        ("m004", [(3, 1), (5, 1)]),
+    ]
+    qq = 10
+
+    cases = []
+    for name, slopes in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        num_hard = nz.num_hard
+
+        for P, Q in slopes:
+            R, S = find_rs(P, Q)
+            try:
+                nz_nc = apply_general_cusp_basis_change(
+                    nz, 0, a=P, b=Q, c=-R, d=-S
+                )
+            except Exception as exc:
+                print(f"  skip {name} ({P}/{Q}): {exc}", file=sys.stderr)
+                continue
+
+            n_cusps = nz_nc.r
+
+            # Build probe entries in NC basis
+            seen = set()
+            entries_nc = []
+            # a-probe
+            for e_val in (Fraction(-2), Fraction(-1), Fraction(-1, 2),
+                          Fraction(1, 2), Fraction(1), Fraction(2)):
+                m_ext = [0] * n_cusps
+                e_ext = [Fraction(0)] * n_cusps
+                e_ext[0] = e_val
+                key = (tuple(m_ext), tuple(e_ext))
+                if key not in seen:
+                    res = compute_refined_index(nz_nc, m_ext, e_ext, qq)
+                    if res is not None:
+                        seen.add(key)
+                        entries_nc.append((m_ext, e_ext, res))
+            # b-probe
+            for m_val in (-2, -1, 1, 2):
+                m_ext = [0] * n_cusps
+                e_ext = [Fraction(0)] * n_cusps
+                m_ext[0] = m_val
+                key = (tuple(m_ext), tuple(e_ext))
+                if key not in seen:
+                    res = compute_refined_index(nz_nc, m_ext, e_ext, qq)
+                    if res is not None:
+                        seen.add(key)
+                        entries_nc.append((m_ext, e_ext, res))
+
+            # Weyl checks
+            ab = compute_ab_vectors(entries_nc, num_hard) if entries_nc else None
+            ab_valid = ab is not None and ab.is_valid
+
+            adjoint_pass = None
+            adjoint_value = None
+            c_e_x2_adj = []
+            missing_adj = []
+            if ab is not None:
+                ab_compat = ab.make_filling_compatible()
+                collapsed = {j for j in range(num_hard)
+                             if not ab.edge_compatible[j]}
+                res_adj = check_adjoint_projection(
+                    entries_nc, num_hard, ab=ab_compat, cusp_idx=0,
+                    collapsed_edges=collapsed,
+                )
+                adjoint_pass = bool(res_adj.is_pass) if res_adj.is_pass is not None else None
+                adjoint_value = (int(res_adj.projected_value)
+                                 if res_adj.projected_value is not None else None)
+                c_e_x2_adj = sorted(
+                    [[int(Fraction(k) * 2), int(v)] for k, v in res_adj.c_e.items()]
+                )
+                missing_adj = sorted(
+                    int(Fraction(e) * 2) for e in res_adj.missing_e
+                )
+            else:
+                collapsed = set()
+
+            # Marginal check (unrefined q^1 projection)
+            marginal_proj = None
+            is_marginal = None
+            c_e_x2_marg = []
+            try:
+                needed = [Fraction(-2), Fraction(-1), Fraction(1), Fraction(2)]
+                c_e_marg = {}
+                for e_val in needed:
+                    m_ext_s = [0] * n_cusps
+                    e_ext_s = [Fraction(0)] * n_cusps
+                    e_ext_s[0] = e_val
+                    r3d = compute_index_3d_python(nz_nc, m_ext_s, e_ext_s, qq)
+                    idx = 2 - r3d.min_power
+                    c = r3d.coeffs[idx] if 0 <= idx < len(r3d.coeffs) else 0
+                    c_e_marg[int(e_val * 2)] = int(c)
+                c_e_x2_marg = sorted(c_e_marg.items())
+                num = c_e_marg[-2] + c_e_marg[2] - c_e_marg[-4] - c_e_marg[4]
+                if num % 2 != 0:
+                    marginal_proj = None
+                    is_marginal = None
+                else:
+                    marginal_proj = num // 2
+                    is_marginal = (marginal_proj >= 0)
+            except Exception:
+                pass
+
+            case = {
+                "name": name,
+                "P": P,
+                "Q": Q,
+                "R": R,
+                "S": S,
+                "cusp_idx": 0,
+                "num_hard": int(num_hard),
+                "qq_order": qq,
+                "ab_valid": ab_valid,
+                "ab": None,
+                "collapsed_edges": sorted(int(j) for j in collapsed),
+                "adjoint_pass": adjoint_pass,
+                "adjoint_value": adjoint_value,
+                "c_e_x2_adj": c_e_x2_adj,
+                "missing_adj": missing_adj,
+                "marginal_proj": marginal_proj,
+                "is_marginal": is_marginal,
+                "c_e_x2_marg": c_e_x2_marg,
+            }
+            if ab is not None:
+                case["ab"] = {
+                    "a_num": [int(v.numerator) for v in ab.a],
+                    "a_den": [int(v.denominator) for v in ab.a],
+                    "b_num": [int(v.numerator) for v in ab.b],
+                    "b_den": [int(v.denominator) for v in ab.b],
+                }
+            cases.append(case)
+
+    write_json(out_root / "refined_dehn" / "nc_compat.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -1105,6 +1271,8 @@ def main() -> int:
     total += gen_is_chain(out_root)
     print("multi_cusp …", flush=True)
     total += gen_multi_cusp(out_root)
+    print("nc_compat …", flush=True)
+    total += gen_nc_compat(out_root)
 
     print(f"done: {total} cases written under {out_root}")
     return 0
