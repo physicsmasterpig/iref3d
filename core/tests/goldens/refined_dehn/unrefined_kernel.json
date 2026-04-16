@@ -1,0 +1,3070 @@
+{
+  "cases": [
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 18,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                0,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                1,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                1,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                1,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                1,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                3,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                3,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                4,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                5,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                5,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                5,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                5,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                5,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                6,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                7,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                7,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                7,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                7,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                7,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                7,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                9,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                9,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                9,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                9,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -8,
+              "key": [
+                9,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                9,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                9,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                9,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                10,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 3,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                10,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 10,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 4,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 8,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 11,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 20,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 4,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                10,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                10,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 10,
+              "key": [
+                10,
+                0
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "m003",
+      "num_hard": 1
+    },
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 23,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                -2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                -2,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                0,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                0,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                0,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                2,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                4,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -9,
+              "key": [
+                6,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                6,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 11,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -15,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -10,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                8,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 21,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -31,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -9,
+              "key": [
+                10,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 10,
+              "key": [
+                10,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 7,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                -8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -14
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                -8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                -14
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                -8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 3,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                -8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 12,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                10,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 7,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                2
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "m004",
+      "num_hard": 1
+    },
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 14,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                0,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                0,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                2,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                4,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                4,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                6,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                6,
+                10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                12
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -8,
+              "key": [
+                8,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                8,
+                10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                12
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                10,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 7,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -11,
+              "key": [
+                10,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -12,
+              "key": [
+                10,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                10,
+                10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                12
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                14
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 7,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                1,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                3,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                3,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                5,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                5,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                5,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                5,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                7,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 7,
+              "key": [
+                7,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                7,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -3,
+              "key": [
+                7,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                7,
+                7
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -5,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                9,
+                -5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                9,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 12,
+              "key": [
+                9,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                9,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                9,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                9,
+                7
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -9,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 10,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 2,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                6,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 9,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 7,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 13,
+              "key": [
+                10,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 13,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                10,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "has_cusp_eta": false,
+          "n_kernel_terms": 31,
+          "series": [
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -20
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -19
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -18
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -17
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -16
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -15
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -14
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -13
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -12
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -11
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -9
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -7
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                0,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                2,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                2,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                4,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                4,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                4,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                -3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                6,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                6,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                6,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                6,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                11
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                6,
+                13
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                8,
+                -3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -8,
+              "key": [
+                8,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -10,
+              "key": [
+                8,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                8,
+                0
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 4,
+              "key": [
+                8,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                8,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 6,
+              "key": [
+                8,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                8,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                11
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                13
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                16
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                8,
+                18
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -2,
+              "key": [
+                10,
+                -4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -4,
+              "key": [
+                10,
+                -3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -17,
+              "key": [
+                10,
+                -2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -14,
+              "key": [
+                10,
+                -1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                10,
+                1
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 9,
+              "key": [
+                10,
+                2
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 11,
+              "key": [
+                10,
+                3
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 5,
+              "key": [
+                10,
+                4
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 3,
+              "key": [
+                10,
+                5
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 2,
+              "key": [
+                10,
+                6
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                8
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": 1,
+              "key": [
+                10,
+                10
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                11
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                13
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                16
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                18
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                21
+              ]
+            },
+            {
+              "coeff_den": 1,
+              "coeff_num": -1,
+              "key": [
+                10,
+                23
+              ]
+            }
+          ]
+        }
+      ],
+      "name": "m006",
+      "num_hard": 1
+    }
+  ]
+}

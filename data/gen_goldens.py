@@ -870,6 +870,73 @@ def gen_dehn_filling(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_refined_dehn(out_root: Path) -> int:
+    """Refined Dehn filling goldens: HJ-CF + unrefined-kernel-on-refined path."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_dehn_filling import (
+        hj_continued_fraction,
+        compute_unrefined_kernel_refined_index,
+    )
+
+    # HJ-CF goldens
+    hj_cases = []
+    for p in range(-10, 11):
+        for q in range(1, 11):
+            from math import gcd
+            if gcd(abs(p), q) != 1:
+                continue
+            ks = hj_continued_fraction(p, q)
+            hj_cases.append({"p": p, "q": q, "ks": ks})
+    # Special cases
+    hj_cases.append({"p": 1, "q": 0, "ks": hj_continued_fraction(1, 0)})
+    hj_cases.append({"p": -1, "q": 0, "ks": hj_continued_fraction(-1, 0)})
+    write_json(out_root / "refined_dehn" / "hj_cf.json", {"cases": hj_cases})
+
+    # Unrefined kernel applied to I^ref
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    slopes = [(1, 0), (3, 1), (5, 2), (-3, 1)]
+    fill_cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entry = {"name": name, "num_hard": int(nz.num_hard), "fills": []}
+        for (P, Q) in slopes:
+            from math import gcd as _gcd
+            if _gcd(abs(P), abs(Q)) != 1:
+                continue
+            res = compute_unrefined_kernel_refined_index(
+                nz, 0, P, Q, q_order_half=qq,
+            )
+            series_dump = sorted(
+                [{"key": [int(x) for x in k],
+                  "coeff_num": int(v.numerator), "coeff_den": int(v.denominator)}
+                 for k, v in res.series.items()],
+                key=lambda d: d["key"],
+            )
+            entry["fills"].append({
+                "P": P, "Q": Q,
+                "n_kernel_terms": int(res.n_kernel_terms),
+                "has_cusp_eta": bool(res.has_cusp_eta),
+                "series": series_dump,
+            })
+        fill_cases.append(entry)
+    write_json(out_root / "refined_dehn" / "unrefined_kernel.json", {"cases": fill_cases})
+    return len(hj_cases) + len(fill_cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -912,6 +979,8 @@ def main() -> int:
     total += gen_adjoint_w_scan(out_root)
     print("dehn …", flush=True)
     total += gen_dehn_filling(out_root)
+    print("refined_dehn …", flush=True)
+    total += gen_refined_dehn(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 

@@ -22,11 +22,10 @@ pub mod adjoint_unrefined;
 pub mod adjoint_eta0;
 pub mod adjoint_w_scan;
 pub mod dehn;
+pub mod refined_dehn;
 
 // Upcoming modules (stubbed in the plan, not yet implemented):
 //
-// pub mod dehn;
-// pub mod refined_dehn;
 // pub mod cache;
 
 #[cfg(feature = "python")]
