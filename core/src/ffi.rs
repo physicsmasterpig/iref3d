@@ -136,6 +136,58 @@ fn load_nz_with_census(db_path: &str, census_name: &str, name: &str) -> PyResult
     Ok(PyNzData { nz, state })
 }
 
+/// Create NzData from raw arrays (bypasses census DB).
+///
+/// This allows v0.5 to load manifolds via SnapPy and hand the NZ data
+/// directly to the Rust backend.
+///
+/// Arguments:
+///   n, r, num_hard, num_easy: manifold dimensions
+///   g_nz_x2: flat list of 2*g_NZ entries (2n × 2n, row-major, always integer)
+///   nu_x: flat list of ν_x entries (length n)
+///   nu_p_x2: flat list of 2*ν_p entries (length n, always integer)
+#[pyfunction]
+fn create_nz_data(
+    n: usize,
+    r: usize,
+    num_hard: usize,
+    num_easy: usize,
+    g_nz_x2: Vec<i64>,
+    nu_x: Vec<i64>,
+    nu_p_x2: Vec<i64>,
+) -> PyResult<PyNzData> {
+    let expected_g = (2 * n) * (2 * n);
+    if g_nz_x2.len() != expected_g {
+        return Err(PyValueError::new_err(format!(
+            "g_nz_x2 length {}, expected {expected_g} for n={n}",
+            g_nz_x2.len()
+        )));
+    }
+    if nu_x.len() != n {
+        return Err(PyValueError::new_err(format!(
+            "nu_x length {}, expected {n}",
+            nu_x.len()
+        )));
+    }
+    if nu_p_x2.len() != n {
+        return Err(PyValueError::new_err(format!(
+            "nu_p_x2 length {}, expected {n}",
+            nu_p_x2.len()
+        )));
+    }
+    let nz = NzData {
+        n,
+        r,
+        num_hard,
+        num_easy,
+        g_nz_x2,
+        nu_x,
+        nu_p_x2,
+    };
+    let state = EnumerationState::build(&nz);
+    Ok(PyNzData { nz, state })
+}
+
 /// Apply SL(2,Z) basis change at one cusp.
 #[pyfunction]
 fn basis_change(data: &PyNzData, cusp_idx: usize, a: i32, b: i32, c: i32, d: i32) -> PyResult<PyNzData> {
@@ -593,6 +645,7 @@ fn iref3d_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyNzData>()?;
     m.add_function(wrap_pyfunction!(load_nz, m)?)?;
     m.add_function(wrap_pyfunction!(load_nz_with_census, m)?)?;
+    m.add_function(wrap_pyfunction!(create_nz_data, m)?)?;
     m.add_function(wrap_pyfunction!(basis_change, m)?)?;
     m.add_function(wrap_pyfunction!(py_find_rs, m)?)?;
     m.add_function(wrap_pyfunction!(refined_index, m)?)?;
