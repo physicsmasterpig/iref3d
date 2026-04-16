@@ -1,0 +1,1778 @@
+{
+  "cases": [
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "R": 0,
+          "S": -1,
+          "is_stably_zero": true,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -1,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 0,
+              "e_x2": -2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": -3,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 0,
+              "e_x2": -4,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": -5,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 5
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 0,
+              "e_x2": -7,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 7
+            },
+            {
+              "c": 0,
+              "e_x2": -8,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 0,
+              "e_x2": -9,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 9
+            },
+            {
+              "c": 0,
+              "e_x2": -10,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 10
+            },
+            {
+              "c": 0,
+              "e_x2": -12,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 12
+            },
+            {
+              "c": 2,
+              "e_x2": 0,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -1,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 2,
+              "e_x2": -2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -3,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": -5,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 5
+            },
+            {
+              "c": 2,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 2,
+              "e_x2": -7,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 7
+            },
+            {
+              "c": 2,
+              "e_x2": 1,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -1
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": 3,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -3
+            },
+            {
+              "c": 2,
+              "e_x2": 4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -4
+            },
+            {
+              "c": 2,
+              "e_x2": 5,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -5
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -6
+            },
+            {
+              "c": 2,
+              "e_x2": 7,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -7
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -8
+            },
+            {
+              "c": 2,
+              "e_x2": 9,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -9
+            }
+          ],
+          "n_kernel_terms": 29,
+          "series": []
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            }
+          ],
+          "n_kernel_terms": 4,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -2,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                7,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "R": -2,
+          "S": -1,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -5,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 1,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": -1
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            }
+          ],
+          "n_kernel_terms": 5,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -4,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -5,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                4,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                16,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                36,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": 12,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": -10,
+              "m": -4,
+              "multiplicity": 2,
+              "phase": -4
+            }
+          ],
+          "n_kernel_terms": 7,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -3,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                -3,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                -2,
+                1
+              ]
+            ]
+          ]
+        }
+      ],
+      "name": "m003",
+      "nc": {
+        "cusp_idx": 0,
+        "cycles": [
+          {
+            "p": -1,
+            "q": 1
+          },
+          {
+            "p": 0,
+            "q": 1
+          },
+          {
+            "p": 1,
+            "q": 0
+          }
+        ],
+        "slopes_tested": [
+          [
+            -2,
+            1
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "R": 0,
+          "S": -1,
+          "is_stably_zero": true,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": -4,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 0,
+              "e_x2": -8,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 0,
+              "e_x2": -10,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 10
+            },
+            {
+              "c": 0,
+              "e_x2": -12,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 12
+            },
+            {
+              "c": 0,
+              "e_x2": -14,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 14
+            },
+            {
+              "c": 0,
+              "e_x2": -16,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 16
+            },
+            {
+              "c": 0,
+              "e_x2": -18,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 18
+            },
+            {
+              "c": 0,
+              "e_x2": -20,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 20
+            },
+            {
+              "c": 0,
+              "e_x2": -22,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 22
+            },
+            {
+              "c": 0,
+              "e_x2": -24,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 24
+            },
+            {
+              "c": 0,
+              "e_x2": -26,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 26
+            },
+            {
+              "c": 0,
+              "e_x2": -28,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 28
+            },
+            {
+              "c": 0,
+              "e_x2": -30,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 30
+            },
+            {
+              "c": 0,
+              "e_x2": -32,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 32
+            },
+            {
+              "c": 2,
+              "e_x2": 0,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 2,
+              "e_x2": -8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 2,
+              "e_x2": -10,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 10
+            },
+            {
+              "c": 2,
+              "e_x2": -12,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 12
+            },
+            {
+              "c": 2,
+              "e_x2": -14,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 14
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": 4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -4
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -6
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -8
+            },
+            {
+              "c": 2,
+              "e_x2": 10,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -10
+            },
+            {
+              "c": 2,
+              "e_x2": 12,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -12
+            },
+            {
+              "c": 2,
+              "e_x2": 14,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -14
+            },
+            {
+              "c": 2,
+              "e_x2": 16,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -16
+            }
+          ],
+          "n_kernel_terms": 33,
+          "series": []
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": -12,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": -18,
+              "m": 6,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -10,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": 14,
+              "m": -4,
+              "multiplicity": 2,
+              "phase": -4
+            }
+          ],
+          "n_kernel_terms": 9,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "R": -2,
+          "S": -1,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -10,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            }
+          ],
+          "n_kernel_terms": 4,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -2,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -4,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                5,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                17,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": 12,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": 18,
+              "m": 6,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": 14,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": -10,
+              "m": -4,
+              "multiplicity": 2,
+              "phase": -4
+            }
+          ],
+          "n_kernel_terms": 9,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ]
+          ]
+        }
+      ],
+      "name": "m004",
+      "nc": {
+        "cusp_idx": 0,
+        "cycles": [
+          {
+            "p": 1,
+            "q": 0
+          }
+        ],
+        "slopes_tested": [
+          [
+            -2,
+            1
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "fills": [
+        {
+          "P": 1,
+          "Q": 0,
+          "R": 0,
+          "S": -1,
+          "is_stably_zero": true,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": -4,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 0,
+              "e_x2": -8,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 0,
+              "e_x2": -10,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 10
+            },
+            {
+              "c": 0,
+              "e_x2": -12,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 12
+            },
+            {
+              "c": 0,
+              "e_x2": -14,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 14
+            },
+            {
+              "c": 0,
+              "e_x2": -16,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 16
+            },
+            {
+              "c": 2,
+              "e_x2": 0,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 2,
+              "e_x2": -8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": 4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -4
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -6
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -8
+            },
+            {
+              "c": 2,
+              "e_x2": 10,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": -10
+            }
+          ],
+          "n_kernel_terms": 19,
+          "series": []
+        },
+        {
+          "P": 3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": -3,
+              "m": 1,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 0,
+              "e_x2": -6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": -9,
+              "m": 3,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -1,
+              "m": 1,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": -7,
+              "m": 3,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 2,
+              "e_x2": 5,
+              "m": -1,
+              "multiplicity": 2,
+              "phase": -1
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            }
+          ],
+          "n_kernel_terms": 10,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              1,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              3,
+              [
+                -3,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -2,
+                1
+              ]
+            ],
+            [
+              5,
+              [
+                -1,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              7,
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                4,
+                1
+              ]
+            ],
+            [
+              9,
+              [
+                7,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                12,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": 5,
+          "Q": 2,
+          "R": -2,
+          "S": -1,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 6,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            }
+          ],
+          "n_kernel_terms": 3,
+          "series": [
+            [
+              0,
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -3,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -2,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                9,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                18,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                28,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "P": -3,
+          "Q": 1,
+          "R": 1,
+          "S": 0,
+          "is_stably_zero": false,
+          "kernel_terms": [
+            {
+              "c": 0,
+              "e_x2": 0,
+              "m": 0,
+              "multiplicity": 1,
+              "phase": 0
+            },
+            {
+              "c": 0,
+              "e_x2": 3,
+              "m": 1,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 0,
+              "e_x2": 6,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 0,
+              "e_x2": 9,
+              "m": 3,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 0,
+              "e_x2": 12,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 0,
+              "e_x2": 15,
+              "m": 5,
+              "multiplicity": 2,
+              "phase": 5
+            },
+            {
+              "c": 0,
+              "e_x2": 18,
+              "m": 6,
+              "multiplicity": 2,
+              "phase": 6
+            },
+            {
+              "c": 0,
+              "e_x2": 21,
+              "m": 7,
+              "multiplicity": 2,
+              "phase": 7
+            },
+            {
+              "c": 0,
+              "e_x2": 24,
+              "m": 8,
+              "multiplicity": 2,
+              "phase": 8
+            },
+            {
+              "c": 0,
+              "e_x2": 27,
+              "m": 9,
+              "multiplicity": 2,
+              "phase": 9
+            },
+            {
+              "c": 0,
+              "e_x2": 30,
+              "m": 10,
+              "multiplicity": 2,
+              "phase": 10
+            },
+            {
+              "c": 0,
+              "e_x2": 33,
+              "m": 11,
+              "multiplicity": 2,
+              "phase": 11
+            },
+            {
+              "c": 0,
+              "e_x2": 36,
+              "m": 12,
+              "multiplicity": 2,
+              "phase": 12
+            },
+            {
+              "c": 0,
+              "e_x2": 39,
+              "m": 13,
+              "multiplicity": 2,
+              "phase": 13
+            },
+            {
+              "c": 0,
+              "e_x2": 42,
+              "m": 14,
+              "multiplicity": 2,
+              "phase": 14
+            },
+            {
+              "c": 0,
+              "e_x2": 45,
+              "m": 15,
+              "multiplicity": 2,
+              "phase": 15
+            },
+            {
+              "c": 0,
+              "e_x2": 48,
+              "m": 16,
+              "multiplicity": 2,
+              "phase": 16
+            },
+            {
+              "c": 0,
+              "e_x2": 51,
+              "m": 17,
+              "multiplicity": 2,
+              "phase": 17
+            },
+            {
+              "c": 0,
+              "e_x2": 54,
+              "m": 18,
+              "multiplicity": 2,
+              "phase": 18
+            },
+            {
+              "c": 0,
+              "e_x2": 57,
+              "m": 19,
+              "multiplicity": 2,
+              "phase": 19
+            },
+            {
+              "c": 0,
+              "e_x2": 60,
+              "m": 20,
+              "multiplicity": 2,
+              "phase": 20
+            },
+            {
+              "c": 2,
+              "e_x2": 2,
+              "m": 0,
+              "multiplicity": 2,
+              "phase": 0
+            },
+            {
+              "c": 2,
+              "e_x2": 5,
+              "m": 1,
+              "multiplicity": 2,
+              "phase": 1
+            },
+            {
+              "c": 2,
+              "e_x2": 8,
+              "m": 2,
+              "multiplicity": 2,
+              "phase": 2
+            },
+            {
+              "c": 2,
+              "e_x2": 11,
+              "m": 3,
+              "multiplicity": 2,
+              "phase": 3
+            },
+            {
+              "c": 2,
+              "e_x2": 14,
+              "m": 4,
+              "multiplicity": 2,
+              "phase": 4
+            },
+            {
+              "c": 2,
+              "e_x2": -1,
+              "m": -1,
+              "multiplicity": 2,
+              "phase": -1
+            },
+            {
+              "c": 2,
+              "e_x2": -4,
+              "m": -2,
+              "multiplicity": 2,
+              "phase": -2
+            },
+            {
+              "c": 2,
+              "e_x2": -7,
+              "m": -3,
+              "multiplicity": 2,
+              "phase": -3
+            },
+            {
+              "c": 2,
+              "e_x2": -10,
+              "m": -4,
+              "multiplicity": 2,
+              "phase": -4
+            },
+            {
+              "c": 2,
+              "e_x2": -13,
+              "m": -5,
+              "multiplicity": 2,
+              "phase": -5
+            }
+          ],
+          "n_kernel_terms": 31,
+          "series": [
+            [
+              0,
+              [
+                21,
+                1
+              ]
+            ],
+            [
+              2,
+              [
+                -2,
+                1
+              ]
+            ],
+            [
+              4,
+              [
+                -6,
+                1
+              ]
+            ],
+            [
+              6,
+              [
+                -6,
+                1
+              ]
+            ],
+            [
+              8,
+              [
+                -8,
+                1
+              ]
+            ],
+            [
+              10,
+              [
+                -6,
+                1
+              ]
+            ]
+          ]
+        }
+      ],
+      "name": "m006",
+      "nc": {
+        "cusp_idx": 0,
+        "cycles": [
+          {
+            "p": 0,
+            "q": 1
+          },
+          {
+            "p": 1,
+            "q": 0
+          }
+        ],
+        "slopes_tested": [
+          [
+            -2,
+            1
+          ],
+          [
+            -1,
+            1
+          ],
+          [
+            -1,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      }
+    }
+  ]
+}

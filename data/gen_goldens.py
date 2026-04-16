@@ -801,6 +801,75 @@ def gen_adjoint_w_scan(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_dehn_filling(out_root: Path) -> int:
+    """Dehn filling goldens: kernel terms + filled index + NC search."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.dehn_filling import (
+        find_rs, enumerate_kernel_terms,
+        compute_filled_index, find_non_closable_cycles,
+    )
+
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    slopes = [(1, 0), (3, 1), (5, 2), (-3, 1)]
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entry = {"name": name, "fills": [], "nc": None}
+        for (P, Q) in slopes:
+            from math import gcd
+            if gcd(abs(P), abs(Q)) != 1:
+                continue
+            R, S = find_rs(P, Q)
+            kts = enumerate_kernel_terms(
+                P, Q, R, S, nz, 0, [], [Fraction(0)] * 0, qq)
+            filled = compute_filled_index(nz, 0, P, Q, q_order_half=qq)
+            series_dump = sorted(
+                [[int(k), [int(v.numerator), int(v.denominator)]]
+                 for k, v in filled.series.items()],
+                key=lambda x: x[0],
+            )
+            kt_dump = [
+                {"m": int(kt.m), "e_x2": int(Fraction(kt.e) * 2),
+                 "c": int(kt.c), "phase": int(kt.phase),
+                 "multiplicity": int(kt.multiplicity)}
+                for kt in kts
+            ]
+            entry["fills"].append({
+                "P": P, "Q": Q, "R": R, "S": S,
+                "kernel_terms": kt_dump,
+                "n_kernel_terms": int(filled.n_kernel_terms),
+                "series": series_dump,
+                "is_stably_zero": bool(filled.is_stably_zero()),
+            })
+        # Small NC search
+        nc = find_non_closable_cycles(
+            nz, 0, range(-2, 3), range(0, 3),
+            q_order_half=qq, use_symmetry=True)
+        nc_dump = {
+            "cusp_idx": 0,
+            "cycles": [{"p": int(c.P), "q": int(c.Q)} for c in nc.cycles],
+            "slopes_tested": [[int(p), int(q)] for p, q in nc.slopes_tested],
+        }
+        entry["nc"] = nc_dump
+        cases.append(entry)
+    write_json(out_root / "dehn" / "results.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -841,6 +910,8 @@ def main() -> int:
     total += gen_adjoint_eta0(out_root)
     print("adjoint_w_scan …", flush=True)
     total += gen_adjoint_w_scan(out_root)
+    print("dehn …", flush=True)
+    total += gen_dehn_filling(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 

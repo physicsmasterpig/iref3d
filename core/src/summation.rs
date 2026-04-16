@@ -155,6 +155,36 @@ impl EnumerationState {
     }
 }
 
+/// Fast O(1) pre-filter: does I(m_ext, e_ext) have *any* valid half-integer
+/// pattern? Returns `false` if all patterns fail integrality, meaning the
+/// index is structurally zero for these charges.
+pub fn has_valid_summation_terms(
+    state: &EnumerationState,
+    m_ext: &[i64],
+    e_ext_x2: &[i64],
+) -> bool {
+    let size = 2 * state.n;
+    let s2 = 2 * state.s;
+    // me_contrib[i] = cusp_m_cols_xs[i,:] · (2·m) + cusp_e_cols_xs[i,:] · e_x2
+    let mut me_contrib = vec![0i64; size];
+    for i in 0..size {
+        let mut v = 0i64;
+        for j in 0..state.r {
+            v += state.cusp_m_cols_xs[i * state.r + j] * (2 * m_ext[j]);
+            v += state.cusp_e_cols_xs[i * state.r + j] * e_ext_x2[j];
+        }
+        me_contrib[i] = v;
+    }
+    for pat_idx in 0..state.patterns.len() {
+        let dc = &state.delta_contrib_x2s[pat_idx];
+        let all_int = (0..size).all(|i| (me_contrib[i] + dc[i]) % s2 == 0);
+        if all_int {
+            return true;
+        }
+    }
+    false
+}
+
 /// A single summation term produced by [`enumerate_summation_terms`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SummationTerm {
