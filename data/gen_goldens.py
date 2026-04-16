@@ -636,6 +636,79 @@ def gen_adjoint_unrefined(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_adjoint_eta0(out_root: Path) -> int:
+    """Refined q^1-η^0 adjoint projection goldens (single-cusp check_adjoint_projection)."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_index import compute_refined_index
+    from manifold_index.core.weyl_check import (
+        compute_ab_vectors, check_adjoint_projection,
+    )
+
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    m_grid = [-2, -1, 0, 1, 2]
+    e_grid = [Fraction(-2), Fraction(-1), Fraction(-1, 2), Fraction(0),
+              Fraction(1, 2), Fraction(1), Fraction(2)]
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entries = []
+        for m in m_grid:
+            for e in e_grid:
+                res = compute_refined_index(nz, [m], [e], qq)
+                entries.append(([m], [e], res))
+        ab = compute_ab_vectors(entries, nz.num_hard)
+        if ab is None:
+            continue
+        res = check_adjoint_projection(entries, nz.num_hard, ab, 0)
+        entries_dump = []
+        for (m_ext, e_ext, r) in entries:
+            entries_dump.append({
+                "m_ext": list(m_ext),
+                "e_ext_x2": [int(Fraction(v) * 2) for v in e_ext],
+                "items": sorted(
+                    ({"key": [int(x) for x in k], "coeff": int(v)} for k, v in r.items()),
+                    key=lambda d: d["key"],
+                ),
+            })
+        cases.append({
+            "name": name,
+            "entries": entries_dump,
+            "num_hard": int(nz.num_hard),
+            "qq_order": qq,
+            "cusp_idx": 0,
+            "ab": {
+                "a_num": [int(v.numerator) for v in ab.a],
+                "a_den": [int(v.denominator) for v in ab.a],
+                "b_num": [int(v.numerator) for v in ab.b],
+                "b_den": [int(v.denominator) for v in ab.b],
+            },
+            "c_e_x2": sorted(
+                [[int(Fraction(k) * 2), int(v)] for k, v in res.c_e.items()]
+            ),
+            "projected_value": (None if res.projected_value is None
+                                else int(res.projected_value)),
+            "is_pass": bool(res.is_pass),
+            "missing_e_x2": sorted(int(Fraction(e) * 2) for e in res.missing_e),
+        })
+    write_json(out_root / "adjoint_eta0" / "results.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -672,6 +745,8 @@ def main() -> int:
     total += gen_weyl_symmetry(out_root)
     print("adjoint_unrefined …", flush=True)
     total += gen_adjoint_unrefined(out_root)
+    print("adjoint_eta0 …", flush=True)
+    total += gen_adjoint_eta0(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 

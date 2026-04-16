@@ -19,11 +19,10 @@ pub mod index_refined;
 pub mod ab_vectors;
 pub mod weyl_symmetry;
 pub mod adjoint_unrefined;
+pub mod adjoint_eta0;
 
 // Upcoming modules (stubbed in the plan, not yet implemented):
 //
-// pub mod adjoint_unrefined;
-// pub mod adjoint_eta0;
 // pub mod adjoint_w_scan;
 // pub mod dehn;
 // pub mod refined_dehn;
