@@ -24,9 +24,7 @@ pub mod adjoint_w_scan;
 pub mod dehn;
 pub mod refined_dehn;
 
-// In-memory caching is handled inline:
-//   - kernel.rs: tet_index_series memoization (TET_CACHE)
-// Disk caches (kernel_disk, iref_disk) deferred to Phase 3.
+pub mod cache;
 
 #[cfg(feature = "python")]
 pub mod ffi;

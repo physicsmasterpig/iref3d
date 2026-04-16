@@ -8,7 +8,7 @@ use num_integer::Integer;
 use crate::summation::{enumerate_summation_terms, has_valid_summation_terms, EnumerationState};
 
 /// One (m, e) summand in the Dehn filling kernel for slope P/Q.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct KernelTerm {
     pub m: i64,
     /// `2·e` (half-integer-safe).

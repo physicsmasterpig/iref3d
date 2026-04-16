@@ -563,6 +563,29 @@ fn clear_cache() {
     crate::kernel::clear_tet_cache();
 }
 
+/// Return the cache directory path.
+#[pyfunction]
+fn cache_dir() -> String {
+    crate::cache::cache_dir().to_string_lossy().into_owned()
+}
+
+/// List all cached kernel slopes at a given qq_order.
+#[pyfunction]
+fn kernel_cache_list(qq_order: i32) -> PyResult<Vec<(i64, i64)>> {
+    crate::cache::kernel_disk::list_slopes(qq_order)
+        .map_err(|e| PyValueError::new_err(format!("kernel cache error: {e}")))
+}
+
+/// Clear all disk caches (kernel + iref).
+#[pyfunction]
+fn clear_disk_cache() -> PyResult<(usize, usize)> {
+    let k = crate::cache::kernel_disk::clear()
+        .map_err(|e| PyValueError::new_err(format!("kernel cache error: {e}")))?;
+    let i = crate::cache::iref_disk::clear()
+        .map_err(|e| PyValueError::new_err(format!("iref cache error: {e}")))?;
+    Ok((k, i))
+}
+
 // ── Module registration ──
 
 #[pymodule]
@@ -584,5 +607,8 @@ fn iref3d_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(refined_index_batch, m)?)?;
     m.add_function(wrap_pyfunction!(strip_monomial, m)?)?;
     m.add_function(wrap_pyfunction!(clear_cache, m)?)?;
+    m.add_function(wrap_pyfunction!(cache_dir, m)?)?;
+    m.add_function(wrap_pyfunction!(kernel_cache_list, m)?)?;
+    m.add_function(wrap_pyfunction!(clear_disk_cache, m)?)?;
     Ok(())
 }
