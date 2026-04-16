@@ -445,6 +445,147 @@ def gen_index_refined(out_root: Path) -> int:
     return len(cases)
 
 
+def gen_ab_vectors(out_root: Path) -> int:
+    """ABVectors goldens: for single-cusp manifolds, build a grid of refined-index
+    entries and dump compute_ab_vectors output."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_index import compute_refined_index
+    from manifold_index.core.weyl_check import compute_ab_vectors
+
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    m_grid = [-2, -1, 0, 1, 2]
+    e_grid = [Fraction(-1), Fraction(-1, 2), Fraction(0), Fraction(1, 2), Fraction(1)]
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entries = []
+        entries_dump = []
+        for m in m_grid:
+            for e in e_grid:
+                res = compute_refined_index(nz, [m], [e], qq)
+                entries.append(([m], [e], res))
+                entries_dump.append({
+                    "m_ext": [m],
+                    "e_ext_x2": [int(e * 2)],
+                    "items": sorted(
+                        ({"key": [int(x) for x in k], "coeff": int(v)} for k, v in res.items()),
+                        key=lambda d: d["key"],
+                    ),
+                })
+        ab = compute_ab_vectors(entries, nz.num_hard)
+        if ab is None:
+            ab_dump = None
+        else:
+            ab_dump = {
+                "a_num": [int(v.numerator) for v in ab.a],
+                "a_den": [int(v.denominator) for v in ab.a],
+                "b_num": [int(v.numerator) for v in ab.b],
+                "b_den": [int(v.denominator) for v in ab.b],
+                "num_hard": int(ab.num_hard),
+            }
+        cases.append({
+            "name": name,
+            "num_hard": int(nz.num_hard),
+            "qq_order": qq,
+            "entries": entries_dump,
+            "ab": ab_dump,
+        })
+    write_json(out_root / "ab_vectors" / "results.json", {"cases": cases})
+    return len(cases)
+
+
+def gen_weyl_symmetry(out_root: Path) -> int:
+    """Weyl-symmetry goldens: check_weyl_symmetry + strip_weyl_monomial per entry."""
+    load_manifold = load_v05_manifold()
+    if V05_SRC not in sys.path:
+        sys.path.insert(0, V05_SRC)
+    from fractions import Fraction
+    from manifold_index.core.phase_space import find_easy_edges
+    from manifold_index.core.neumann_zagier import build_neumann_zagier
+    from manifold_index.core.refined_index import compute_refined_index
+    from manifold_index.core.weyl_check import (
+        compute_ab_vectors, check_weyl_symmetry, strip_weyl_monomial,
+    )
+
+    targets = ["m003", "m004", "m006"]
+    qq = 10
+    m_grid = [-2, -1, 0, 1, 2]
+    e_grid = [Fraction(-1), Fraction(-1, 2), Fraction(0), Fraction(1, 2), Fraction(1)]
+
+    cases = []
+    for name in targets:
+        try:
+            md = load_manifold(name)
+            ps = find_easy_edges(md)
+            nz = build_neumann_zagier(md, ps)
+        except Exception as exc:
+            print(f"  skip {name}: {exc}", file=sys.stderr)
+            continue
+        if nz.r != 1:
+            continue
+        entries = []
+        for m in m_grid:
+            for e in e_grid:
+                res = compute_refined_index(nz, [m], [e], qq)
+                entries.append(([m], [e], res))
+        ab = compute_ab_vectors(entries, nz.num_hard)
+        if ab is None:
+            continue
+        sym = check_weyl_symmetry(entries, nz.num_hard, ab, q_order_half=qq)
+        sym_dump = []
+        strips_dump = []
+        for (m_ext, e_ext, res) in entries:
+            key = (tuple(m_ext), tuple(e_ext))
+            ok = bool(sym.get(key, False))
+            sym_dump.append({
+                "m_ext": list(m_ext),
+                "e_ext_x2": [int(Fraction(v) * 2) for v in e_ext],
+                "ok": ok,
+            })
+            centre, stripped = strip_weyl_monomial(res, m_ext, e_ext, ab, nz.num_hard)
+            strips_dump.append({
+                "m_ext": list(m_ext),
+                "e_ext_x2": [int(Fraction(v) * 2) for v in e_ext],
+                "centre_num": [int(c.numerator) for c in centre],
+                "centre_den": [int(c.denominator) for c in centre],
+                "stripped": sorted(
+                    ({"key": [int(x) for x in k], "coeff": int(v)} for k, v in stripped.items()),
+                    key=lambda d: d["key"],
+                ),
+            })
+        ab_dump = {
+            "a_num": [int(v.numerator) for v in ab.a],
+            "a_den": [int(v.denominator) for v in ab.a],
+            "b_num": [int(v.numerator) for v in ab.b],
+            "b_den": [int(v.denominator) for v in ab.b],
+        }
+        cases.append({
+            "name": name,
+            "num_hard": int(nz.num_hard),
+            "qq_order": qq,
+            "ab": ab_dump,
+            "symmetry": sym_dump,
+            "strip": strips_dump,
+        })
+    write_json(out_root / "weyl_symmetry" / "results.json", {"cases": cases})
+    return len(cases)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -475,6 +616,10 @@ def main() -> int:
     total += gen_index_unrefined(out_root)
     print("index_refined …", flush=True)
     total += gen_index_refined(out_root)
+    print("ab_vectors …", flush=True)
+    total += gen_ab_vectors(out_root)
+    print("weyl_symmetry …", flush=True)
+    total += gen_weyl_symmetry(out_root)
     # future modules: gen_nz, gen_summation, gen_index, gen_refined,
     # gen_weyl, gen_adjoint_*, gen_dehn, gen_refined_dehn.
 

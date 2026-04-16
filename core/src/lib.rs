@@ -16,12 +16,11 @@ pub mod nz;
 pub mod summation;
 pub mod index_unrefined;
 pub mod index_refined;
+pub mod ab_vectors;
+pub mod weyl_symmetry;
 
 // Upcoming modules (stubbed in the plan, not yet implemented):
 //
-// pub mod index_refined;
-// pub mod ab_vectors;
-// pub mod weyl_symmetry;
 // pub mod adjoint_unrefined;
 // pub mod adjoint_eta0;
 // pub mod adjoint_w_scan;
