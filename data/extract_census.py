@@ -178,6 +178,18 @@ def main() -> int:
              "(slow: 4^n pattern enumeration per manifold)",
     )
     ap.add_argument(
+        "--nz",
+        action="store_true",
+        help="populate the nz table (Neumann-Zagier data) via v0.5's "
+             "find_easy_edges + build_neumann_zagier",
+    )
+    ap.add_argument(
+        "--nz-only",
+        action="store_true",
+        help="like --nz but skip re-inserting into the manifolds table "
+             "(faster for resuming an interrupted nz run)",
+    )
+    ap.add_argument(
         "--names",
         type=str,
         default=None,
@@ -201,7 +213,10 @@ def main() -> int:
     if args.names:
         name_filter = {s.strip() for s in args.names.split(",") if s.strip()}
 
-    if args.phase_space:
+    if args.nz_only:
+        args.nz = True
+
+    if args.phase_space or args.nz:
         # Lazy import — pulls in scipy + the v0.5 src tree.
         import os
         v05_src = os.environ.get(
@@ -211,6 +226,9 @@ def main() -> int:
         if v05_src not in sys.path:
             sys.path.insert(0, v05_src)
         from manifold_index.core.phase_space import find_easy_edges
+    if args.nz:
+        from manifold_index.core.neumann_zagier import build_neumann_zagier
+        from fractions import Fraction
 
     total = 0
     for census_tag, cls_name in CENSUSES:
@@ -221,6 +239,7 @@ def main() -> int:
         count = 0
         rows = []
         ps_rows = []
+        nz_rows = []
         for M in iter_census(cls_name, args.limit):
             name = M.name()
             if name_filter is not None and name not in name_filter:
@@ -232,13 +251,18 @@ def main() -> int:
                 continue
             rows.append((census_tag, name, n, r, blob, pivots_blob))
             count += 1
+            if count % 1000 == 0:
+                print(f"  {count} ...", flush=True)
 
-            if args.phase_space:
+            if args.phase_space or args.nz:
+                mdata = _load_manifold_data(M, n, r)
                 try:
-                    ps = find_easy_edges(_load_manifold_data(M, n, r))
+                    ps = find_easy_edges(mdata)
                 except Exception as exc:
                     print(f"  phase_space skip {name}: {exc}", file=sys.stderr)
-                else:
+                    ps = None
+
+                if ps is not None and args.phase_space:
                     easy_flat = []
                     for row in ps.all_easy:
                         easy_flat.extend(int(x) for x in row.tolist())
@@ -255,20 +279,52 @@ def main() -> int:
                         easy_blob, indep_blob, hard_blob,
                     ))
 
+                if ps is not None and args.nz:
+                    try:
+                        nz = build_neumann_zagier(mdata, ps)
+                    except Exception as exc:
+                        print(f"  nz skip {name}: {exc}", file=sys.stderr)
+                    else:
+                        nn = int(nz.n)
+                        # g_NZ (2n × 2n) → ×2 integers, row-major i64 LE
+                        g_flat = []
+                        for i in range(2 * nn):
+                            for j in range(2 * nn):
+                                g_flat.append(int(Fraction(nz.g_NZ[i, j]) * 2))
+                        g_blob = struct.pack(f"<{len(g_flat)}q", *g_flat)
+                        # nu_x (n,) → i64 LE
+                        nux = [int(nz.nu_x[i]) for i in range(nn)]
+                        nux_blob = struct.pack(f"<{len(nux)}q", *nux)
+                        # nu_p (n,) → ×2 integers, i64 LE
+                        nup = [int(Fraction(nz.nu_p[i]) * 2) for i in range(nn)]
+                        nup_blob = struct.pack(f"<{len(nup)}q", *nup)
+                        nz_rows.append((
+                            census_tag, name, nn, int(nz.r),
+                            int(nz.num_hard), int(nz.num_easy),
+                            g_blob, nux_blob, nup_blob,
+                        ))
+
             if len(rows) >= 500:
-                conn.executemany(
-                    "INSERT OR REPLACE INTO manifolds VALUES (?, ?, ?, ?, ?, ?)",
-                    rows,
-                )
+                if not args.nz_only:
+                    conn.executemany(
+                        "INSERT OR REPLACE INTO manifolds VALUES (?, ?, ?, ?, ?, ?)",
+                        rows,
+                    )
                 if ps_rows:
                     conn.executemany(
                         "INSERT OR REPLACE INTO phase_space VALUES (?,?,?,?,?,?,?)",
                         ps_rows,
                     )
+                if nz_rows:
+                    conn.executemany(
+                        "INSERT OR REPLACE INTO nz VALUES (?,?,?,?,?,?,?,?,?)",
+                        nz_rows,
+                    )
                 conn.commit()
                 rows.clear()
                 ps_rows.clear()
-        if rows:
+                nz_rows.clear()
+        if rows and not args.nz_only:
             conn.executemany(
                 "INSERT OR REPLACE INTO manifolds VALUES (?, ?, ?, ?, ?, ?)",
                 rows,
@@ -277,6 +333,11 @@ def main() -> int:
             conn.executemany(
                 "INSERT OR REPLACE INTO phase_space VALUES (?,?,?,?,?,?,?)",
                 ps_rows,
+            )
+        if nz_rows:
+            conn.executemany(
+                "INSERT OR REPLACE INTO nz VALUES (?,?,?,?,?,?,?,?,?)",
+                nz_rows,
             )
         conn.commit()
         dt = time.time() - t0
