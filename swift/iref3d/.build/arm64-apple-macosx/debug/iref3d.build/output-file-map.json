@@ -1,0 +1,61 @@
+{
+  "": {
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/primary.swiftdeps"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/App/AppState.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/AppState.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/AppState.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/AppState~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/AppState.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/AppState.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/App/ContentView.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/ContentView.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/ContentView.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/ContentView.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/ContentView.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/App/iref3dApp.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/iref3dApp.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/iref3dApp.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/iref3dApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/iref3dApp.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/iref3dApp.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/ContentView/MainContentView.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/MainContentView.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/MainContentView.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/MainContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/MainContentView.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/MainContentView.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/ContentView/WebViewBridge.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/WebViewBridge.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/WebViewBridge.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/WebViewBridge~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/WebViewBridge.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/WebViewBridge.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/Models/Manifold.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/Manifold.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/Manifold.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/Manifold~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/Manifold.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/Manifold.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/Sources/iref3d/Sidebar/SidebarView.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/SidebarView.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/SidebarView.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/SidebarView~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/SidebarView.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/SidebarView.dia"
+  },
+  "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/DerivedSources/resource_bundle_accessor.swift": {
+    "dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/resource_bundle_accessor.d",
+    "object": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/resource_bundle_accessor.swift.o",
+    "swiftmodule": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/resource_bundle_accessor~partial.swiftmodule",
+    "swift-dependencies": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/resource_bundle_accessor.swiftdeps",
+    "diagnostics": "/Users/pmp/Documents/Research/iref3d/swift/iref3d/.build/arm64-apple-macosx/debug/iref3d.build/resource_bundle_accessor.dia"
+  }
+}

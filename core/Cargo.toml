@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 
 [lib]
 name = "iref3d_core"
-crate-type = ["lib", "cdylib"]
+crate-type = ["lib", "cdylib", "staticlib"]
 
 [dependencies]
 hashbrown = "0.14"
@@ -28,6 +28,7 @@ features = ["extension-module"]
 [features]
 default = []
 python = ["pyo3", "pyo3-build-config"]
+swift = []
 # dev-only: will embed Python for call-by-call diffing against v0.5
 live-diff = []
 

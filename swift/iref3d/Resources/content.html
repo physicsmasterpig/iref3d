@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="content.css">
+</head>
+<body>
+
+<div id="content">
+  <!-- Manifold section -->
+  <div class="section" id="sec-manifold">
+    <div class="section-header" onclick="toggleSection('manifold')">
+      <span class="section-title">Manifold</span>
+      <span class="section-status" id="manifold-status">no manifold loaded</span>
+      <span class="chevron" id="chev-manifold">&#x25BC;</span>
+    </div>
+    <div class="math-area" id="body-manifold">
+      <div class="form-row">
+        <span class="form-label">Name</span>
+        <input type="text" id="inp-name" value="" placeholder="e.g. m006" style="font-weight:600">
+        <span class="form-label" style="margin-left:6px">$N_{\max}$</span>
+        <input type="number" id="inp-nmax" value="10" style="width:50px">
+        <button class="btn btn-primary" id="btn-load-manifold" onclick="doLoadManifold()">Load</button>
+      </div>
+      <div id="load-manifold-progress-slot"></div>
+      <div id="manifold-info" style="display:none">
+        <div class="info-bar" id="manifold-info-bar"></div>
+        <h3>Neumann-Zagier Matrix</h3>
+        <div id="nz-matrix"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Refined Index section -->
+  <div class="section" id="sec-index">
+    <div class="section-header" onclick="toggleSection('index')">
+      <span class="section-title">Refined Index</span>
+      <span class="section-status" id="index-status">ready</span>
+      <span class="chevron" id="chev-index">&#x25BC;</span>
+    </div>
+    <div class="math-area" id="body-index">
+      <div class="form-row">
+        <span class="form-label">Mode</span>
+        <div class="radio-group">
+          <label><input type="radio" name="mode" value="query"> Single query</label>
+          <label><input type="radio" name="mode" value="grid" checked> Grid</label>
+          <label><input type="radio" name="mode" value="cache"> From cache</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <span class="form-label">$m$</span>
+        <input type="number" id="inp-m-lo" value="-2" style="width:50px">
+        <span class="to-sep">to</span>
+        <input type="number" id="inp-m-hi" value="2" style="width:50px">
+        <span class="form-label" style="margin-left:10px">$e$</span>
+        <input type="number" id="inp-e-lo" value="-2" style="width:50px" step="0.5">
+        <span class="to-sep">to</span>
+        <input type="number" id="inp-e-hi" value="2" style="width:50px" step="0.5">
+      </div>
+      <div class="form-row">
+        <span class="form-label">$\eta$</span>
+        <select id="sel-eta"><option selected>Full refined</option><option>Unrefined (3D index)</option><option>Custom</option></select>
+        <div id="edge-toggles-index" style="display:inline-flex; gap:8px; margin-left:8px;"></div>
+      </div>
+      <div style="text-align:right">
+        <span class="muted" id="query-count"></span>
+        <button class="btn btn-primary" id="btn-compute-index" onclick="doComputeIndex()" style="margin-left:8px">Compute</button>
+      </div>
+      <div id="compute-index-progress-slot"></div>
+
+      <!-- Results table -->
+      <div id="index-results"></div>
+    </div>
+  </div>
+
+  <!-- Dehn Filling section -->
+  <div class="section" id="sec-filling">
+    <div class="section-header" onclick="toggleSection('filling')">
+      <span class="section-title">Dehn Filling</span>
+      <span class="section-status" id="filling-status">needs index data</span>
+      <span class="chevron" id="chev-filling">&#x25BC;</span>
+    </div>
+    <div class="math-area" id="body-filling">
+      <!-- Phase 1: NC cycle search -->
+      <h3>1. Find Non-closable Cycles</h3>
+      <div class="form-row" id="nc-range-row">
+        <span class="form-label">$|P| \leq$</span>
+        <input type="number" id="inp-nc-p" value="3" style="width:50px">
+        <span class="form-label" style="margin-left:8px">$Q_{\max}$</span>
+        <input type="number" id="inp-nc-q" value="5" style="width:50px">
+        <label style="font-size:13px; margin-left:10px"><input type="checkbox" id="chk-nc-cache"> Use cache</label>
+        <button class="btn btn-primary" id="btn-find-nc" style="margin-left:6px" onclick="doFindNC()">Find NC Cycles</button>
+        <span style="flex:1"></span>
+        <span class="muted" id="nc-summary"></span>
+      </div>
+      <div id="find-nc-progress-slot"></div>
+
+      <!-- Per-cusp blocks (rendered dynamically) -->
+      <div id="cusp-blocks"></div>
+
+      <div id="compute-filling-row" style="display:none; text-align:right; margin-top:8px;">
+        <button class="btn btn-primary" id="btn-compute-filling" onclick="doComputeFilling()">Compute filled index</button>
+      </div>
+      <div id="compute-filling-progress-slot"></div>
+
+      <div class="sep" id="filling-sep" style="display:none"></div>
+
+      <!-- Phase 2: Results -->
+      <div id="filling-results"></div>
+    </div>
+  </div>
+
+  <!-- Export section -->
+  <div class="section" id="sec-export">
+    <div class="section-header" onclick="toggleSection('export')">
+      <span class="section-title">Export</span>
+      <span class="section-status" id="export-status">needs data</span>
+      <span class="chevron" id="chev-export">&#x25BC;</span>
+    </div>
+    <div class="math-area" id="body-export">
+      <div class="form-row">
+        <span class="form-label" style="min-width:50px">Include</span>
+        <div class="checkbox-group">
+          <label><input type="checkbox" checked> Manifold</label>
+          <label><input type="checkbox" checked> Refined index</label>
+          <label><input type="checkbox" checked> NC cycles</label>
+          <label><input type="checkbox" checked> Filled index</label>
+        </div>
+      </div>
+      <div class="export-formats">
+        <div class="export-format-item"><input type="checkbox" checked> LaTeX (.tex)</div>
+        <div class="export-format-item"><input type="checkbox" checked> Mathematica (.m)</div>
+        <div class="export-format-item"><input type="checkbox"> JSON</div>
+        <div class="export-format-item"><input type="checkbox"> Full report</div>
+      </div>
+      <div class="export-actions">
+        <button class="btn btn-primary" onclick="doExport()">Export All</button>
+        <button class="btn" onclick="doCopyLatex()">Copy LaTeX</button>
+        <button class="btn" onclick="doCopyMathematica()">Copy Mathematica</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="content.js"></script>
+</body>
+</html>

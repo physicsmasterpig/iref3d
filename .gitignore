@@ -19,5 +19,10 @@ __pycache__/
 .vscode/
 .idea/
 
+# Swift / Xcode
+swift/iref3d/iref3d.xcodeproj/
+swift/iref3d/*.xcworkspace/
+xcuserdata/
+
 # Local machine-specific Claude permission list
 .claude/

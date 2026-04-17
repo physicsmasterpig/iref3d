@@ -28,3 +28,6 @@ pub mod cache;
 
 #[cfg(feature = "python")]
 pub mod ffi;
+
+#[cfg(feature = "swift")]
+pub mod swift_ffi;

@@ -84,6 +84,16 @@ CREATE TABLE IF NOT EXISTS phase_space (
     hard_pad   BLOB    NOT NULL,
     PRIMARY KEY (census, name)
 );
+
+-- Alias table: maps alternative names (knot notation, link notation, etc.)
+-- to census names. Built from SnapPy's identify().
+CREATE TABLE IF NOT EXISTS aliases (
+    alias   TEXT    NOT NULL,
+    census  TEXT    NOT NULL,
+    name    TEXT    NOT NULL,
+    PRIMARY KEY (alias)
+);
+CREATE INDEX IF NOT EXISTS idx_alias ON aliases(alias);
 """
 
 
@@ -195,6 +205,12 @@ def main() -> int:
         default=None,
         help="comma-separated manifold names — restricts extraction to just these "
              "(useful for phase-space-only runs on fixtures)",
+    )
+    ap.add_argument(
+        "--aliases",
+        action="store_true",
+        help="populate the aliases table from SnapPy's identify() — maps knot "
+             "names (4_1, 5^2_1, etc.) to census names",
     )
     args = ap.parse_args()
 
@@ -345,8 +361,72 @@ def main() -> int:
         total += count
 
     print(f"done: {total} manifolds written to {db_path}")
+
+    if args.aliases:
+        _populate_aliases(conn, args.limit)
+
     conn.close()
     return 0
+
+
+def _populate_aliases(conn, limit=None):
+    """Populate the aliases table from SnapPy's identify().
+
+    For each manifold in the census, calls M.identify() which returns a list
+    of names like [m004(0,0), 4_1(0,0), K2_1(0,0), K4a1(0,0), ...].
+    We strip the filling suffixes and store each name as an alias.
+    """
+    import re
+    import snappy
+
+    print("[aliases] building alias table...", flush=True)
+    t0 = time.time()
+
+    # Get all manifolds from the DB
+    rows = conn.execute(
+        "SELECT census, name FROM manifolds"
+    ).fetchall()
+
+    alias_rows = []
+    count = 0
+    for census_tag, name in rows:
+        if limit is not None and count >= limit * 4:
+            break
+
+        try:
+            M = snappy.Manifold(name)
+            ids = M.identify()
+        except Exception:
+            continue
+
+        for ident in ids:
+            # ident looks like "m004(0,0)" or "4_1(0,0)" — strip filling
+            alias = re.sub(r'\(.*$', '', str(ident)).strip()
+            if alias and alias != name:
+                alias_rows.append((alias, census_tag, name))
+
+        count += 1
+        if count % 500 == 0:
+            print(f"  {count} manifolds scanned...", flush=True)
+
+        if len(alias_rows) >= 2000:
+            conn.executemany(
+                "INSERT OR IGNORE INTO aliases VALUES (?, ?, ?)",
+                alias_rows,
+            )
+            conn.commit()
+            alias_rows.clear()
+
+    if alias_rows:
+        conn.executemany(
+            "INSERT OR IGNORE INTO aliases VALUES (?, ?, ?)",
+            alias_rows,
+        )
+        conn.commit()
+
+    dt = time.time() - t0
+    total_aliases = conn.execute("SELECT COUNT(*) FROM aliases").fetchone()[0]
+    print(f"  {total_aliases} aliases in {dt:.1f}s", flush=True)
 
 
 def _load_manifold_data(M, n: int, r: int):

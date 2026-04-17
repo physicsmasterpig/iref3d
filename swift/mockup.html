@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>iref3d — Swift GUI Mockup</title>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+      crossorigin="anonymous">
+<script defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"
+        crossorigin="anonymous"></script>
+<script defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+        crossorigin="anonymous"></script>
+<style>
+/* ── v0.5 exact theme: system font, light bg, matching CSS classes ── */
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+/* ── Title bar ── */
+.titlebar {
+  height: 38px;
+  background: #e8e8ed;
+  border-bottom: 1px solid #d2d2d7;
+  display: flex; align-items: center; padding: 0 12px;
+}
+.traffic-lights { display: flex; gap: 8px; margin-right: 16px; }
+.traffic-lights span { width: 12px; height: 12px; border-radius: 50%; }
+.tl-close { background: #ff5f57; }
+.tl-min   { background: #febc2e; }
+.tl-max   { background: #28c840; }
+.titlebar h1 {
+  font-size: 13px; font-weight: 500; color: #1d1d1f;
+  flex: 1; text-align: center; margin-right: 80px;
+}
+
+/* ── App layout ── */
+.app { display: flex; height: calc(100vh - 38px); }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 200px; min-width: 200px;
+  background: #f0f0f5;
+  border-right: 1px solid #d2d2d7;
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.sidebar-section { padding: 10px 12px 6px; }
+.sidebar-section h3 {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  color: #86868b; margin-bottom: 6px;
+}
+.manifold-card {
+  background: #fff; border: 1px solid #d2d2d7;
+  border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
+  box-shadow: 0 0.5px 1px rgba(0,0,0,0.04);
+  transition: all 0.12s ease;
+}
+.manifold-card.active { border-color: #007aff; background: #f0f5ff; box-shadow: 0 0 0 2px rgba(0,122,255,0.12); }
+.manifold-card .mc-name { font-size: 14px; font-weight: 600; }
+.manifold-card .mc-meta { font-size: 11px; color: #86868b; margin-top: 2px; }
+.recent-item {
+  padding: 4px 8px; border-radius: 5px;
+  font-size: 13px; cursor: pointer;
+  display: flex; justify-content: space-between;
+}
+.recent-item:hover { background: #e5e5ea; }
+.ri-meta { color: #86868b; font-size: 11px; }
+.sidebar-tool { padding: 4px 8px; border-radius: 5px; font-size: 13px; cursor: pointer; }
+.sidebar-tool:hover { background: #e5e5ea; }
+
+/* ── Main content ── */
+.main {
+  flex: 1; overflow-y: auto;
+  padding: 16px 24px; background: #ffffff;
+}
+
+/* ── Section panels ── */
+.section {
+  background: #fff; border: 1px solid #d2d2d7;
+  border-radius: 10px; margin-bottom: 12px; overflow: hidden;
+  box-shadow: 0 0.5px 2px rgba(0,0,0,0.04);
+}
+.section-header {
+  display: flex; align-items: center;
+  padding: 9px 14px; background: linear-gradient(to bottom, #fcfcfe, #f6f6f8);
+  border-bottom: 1px solid #e5e5ea;
+  cursor: pointer; user-select: none;
+}
+.section-title { font-size: 13px; font-weight: 600; flex: 1; }
+.section-status { font-size: 11px; color: #86868b; }
+
+/* ── v0.5 exact math area CSS (from katex.py + series_table) ── */
+.math-area {
+  padding: 12px 14px;
+  font-size: 13px; line-height: 1.6;
+}
+.math-area h3 {
+  font-size: 13px; font-weight: 600;
+  margin: 14px 0 4px 0;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ddd;
+}
+.math-area h3:first-child { margin-top: 0; }
+.math-area p { margin: 3px 0; }
+.muted { color: #888; font-size: 12px; }
+.success { color: #2ea043; }
+.warn { color: #d4880a; }
+
+/* ── v0.5 SeriesTable CSS (from _build_table_parts) ── */
+.st { border-collapse: collapse; width: 100%; font-size: 11px; }
+.st th {
+  font-weight: 600; text-transform: uppercase;
+  color: #6e7681; border-bottom: 1px solid #d0d7de;
+  padding: 2px 4px; white-space: nowrap;
+}
+.st td { border-bottom: 1px solid #eaeef2; vertical-align: baseline; white-space: nowrap; }
+.st tr:hover td { background: rgba(59,59,154,0.05); }
+.ic { color: #8b949e; font-size: 11px; width: 1px; text-align: right; padding: 3px 8px 3px 0; }
+.i  { width: 1px; text-align: right; padding: 3px 0; }
+.al { width: 1px; text-align: right; padding: 3px 0; }
+.bl { width: 1px; text-align: left; padding: 3px 0; }
+.sym { width: 1px; text-align: left; padding: 3px 6px 3px 0; }
+.cp { width: 1px; text-align: left; padding: 3px 4px 3px 0; }
+.eq { width: 1px; text-align: center; padding: 3px 4px; }
+.sr { text-align: left; padding: 3px 4px; }
+.vc { font-size: 11px; color: #8b949e; white-space: nowrap; padding: 3px 4px; }
+.ac { white-space: nowrap; width: 60px; text-align: right; padding: 3px 4px; }
+button.a {
+  background: transparent; border: none; cursor: pointer;
+  color: #6e7681; font-size: 13px; padding: 1px 4px; border-radius: 2px;
+}
+button.a:hover { background: #ddf4ff; color: #0969da; }
+button.a.r:hover { background: #FFEEEE; color: #cf222e; }
+
+/* ── v0.5 NC cycle table ── */
+table.nc {
+  border-collapse: collapse; margin: 4px 0;
+  font-size: 12px; width: max-content;
+}
+table.nc th {
+  font-weight: 600; border-bottom: 1px solid #ddd;
+  padding: 2px 8px; text-align: center;
+}
+table.nc td {
+  padding: 3px 8px; vertical-align: baseline;
+  white-space: nowrap; text-align: center;
+}
+
+/* ── Form controls ── */
+.form-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; font-size: 13px; }
+.form-label { font-size: 13px; color: #6e7681; min-width: 36px; font-weight: 500; }
+input[type="text"], input[type="number"], select {
+  background: #fbfbfd;
+  border: 1px solid #c7c7cc;
+  border-radius: 7px;
+  padding: 5px 10px;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-shadow: 0 0.5px 1px rgba(0,0,0,0.04), inset 0 1px 2px rgba(0,0,0,0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+input[type="text"]:hover, input[type="number"]:hover, select:hover {
+  border-color: #a8a8ad;
+  background: #fff;
+}
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+  border-color: #007aff;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.12), 0 0.5px 1px rgba(0,0,0,0.04);
+}
+input[type="text"] { width: 130px; }
+input[type="number"] { width: 56px; text-align: center; }
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236e7681'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 26px;
+  cursor: pointer;
+}
+.btn {
+  padding: 5px 16px;
+  border-radius: 7px;
+  border: 1px solid #c7c7cc;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  background: linear-gradient(to bottom, #fff, #f5f5f7);
+  color: #1d1d1f;
+  box-shadow: 0 0.5px 1px rgba(0,0,0,0.06);
+  transition: all 0.12s ease;
+}
+.btn:hover { background: linear-gradient(to bottom, #f8f8fa, #ececee); border-color: #a8a8ad; }
+.btn:active { background: #e8e8ea; box-shadow: inset 0 1px 2px rgba(0,0,0,0.06); }
+.btn-primary {
+  background: linear-gradient(to bottom, #3493ff, #007aff);
+  color: #fff;
+  border-color: #006ae0;
+  box-shadow: 0 0.5px 1.5px rgba(0,122,255,0.3);
+}
+.btn-primary:hover { background: linear-gradient(to bottom, #1a85ff, #0062cc); border-color: #005bc0; }
+.btn-primary:active { background: #0055b3; box-shadow: inset 0 1px 2px rgba(0,0,0,0.15); }
+.radio-group { display: flex; gap: 12px; }
+.radio-group label { font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.checkbox-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.checkbox-group label { font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+input[type="radio"], input[type="checkbox"] { accent-color: #007aff; }
+
+.info-bar { display: flex; gap: 16px; padding: 6px 0; border-bottom: 1px solid #e5e5ea; margin-bottom: 8px; }
+.info-item { font-size: 12px; }
+.info-item .info-label { color: #86868b; }
+.info-item .info-value { font-weight: 600; margin-left: 3px; }
+.sep { height: 1px; background: #e5e5ea; margin: 10px 0; }
+
+.katex { font-size: 1.0em !important; }
+.form-row .katex { font-size: 0.95em !important; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 4px; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+
+/* ── Mockup page nav ── */
+.page-nav {
+  position: fixed; top: 46px; right: 12px;
+  display: flex; flex-direction: column; gap: 3px; z-index: 100;
+}
+.page-nav button {
+  padding: 5px 10px; border-radius: 7px; border: 1px solid #c7c7cc;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+  color: #1d1d1f; font-size: 11px;
+  cursor: pointer; font-family: inherit; text-align: left;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.12s ease;
+}
+.page-nav button:hover { border-color: #007aff; background: rgba(0,122,255,0.06); }
+.page-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; padding-top: 32px; }
+.page-subtitle { font-size: 12px; color: #86868b; margin-bottom: 14px; }
+.page-break { height: 32px; border-bottom: 2px solid #d2d2d7; }
+
+.export-formats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.export-format-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; background: #fbfbfd; border: 1px solid #c7c7cc;
+  border-radius: 7px; font-size: 12px; cursor: pointer;
+  box-shadow: 0 0.5px 1px rgba(0,0,0,0.04);
+  transition: all 0.12s ease;
+}
+.export-format-item:hover { border-color: #007aff; background: rgba(0,122,255,0.04); }
+.export-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+.cusp-block {
+  padding: 10px 14px; background: linear-gradient(to bottom, #fbfbfd, #f6f6f8);
+  border: 1px solid #dcdce0; border-radius: 9px; margin-bottom: 8px;
+  box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.03);
+}
+.cusp-block .cusp-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.progress-bar { height: 4px; background: #e5e5ea; border-radius: 2px; margin-top: 4px; }
+.progress-fill { height: 100%; background: #007aff; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="traffic-lights"><span class="tl-close"></span><span class="tl-min"></span><span class="tl-max"></span></div>
+  <h1>Refined Index Calculator</h1>
+</div>
+
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="sidebar-section">
+    <h3>Active</h3>
+    <div class="manifold-card active">
+      <div class="mc-name">m006</div>
+      <div class="mc-meta">n = 3, r = 1 &middot; N<sub>max</sub> = 10</div>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <h3>Recent</h3>
+    <div class="recent-item"><span>m004</span><span class="ri-meta">n=2, r=1</span></div>
+    <div class="recent-item"><span>m003</span><span class="ri-meta">n=2, r=1</span></div>
+    <div class="recent-item"><span>s776</span><span class="ri-meta">n=5, r=2</span></div>
+    <div class="recent-item"><span>t12345</span><span class="ri-meta">n=7, r=1</span></div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="sidebar-section" style="border-top:1px solid #d2d2d7; padding-top:10px;">
+    <div class="sidebar-tool">Kernel Builder</div>
+    <div class="sidebar-tool">Data Packs</div>
+    <div class="sidebar-tool">Settings</div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+<div class="page-nav">
+  <button onclick="document.getElementById('p1').scrollIntoView({behavior:'smooth'})">1. Loaded</button>
+  <button onclick="document.getElementById('p2').scrollIntoView({behavior:'smooth'})">2. Index + Weyl</button>
+  <button onclick="document.getElementById('p3').scrollIntoView({behavior:'smooth'})">3. Filling (r=1)</button>
+  <button onclick="document.getElementById('p4').scrollIntoView({behavior:'smooth'})">4. Filling (r=2)</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- STATE 1: Manifold loaded                                -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div id="p1">
+<div class="page-title">State 1 &mdash; Manifold Loaded</div>
+<div class="page-subtitle">Manifold loaded, NZ matrix shown. Index section ready with mode/range/eta controls.</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Manifold</span><span class="section-status">m006 &middot; loaded</span></div>
+  <div class="math-area">
+    <div class="form-row">
+      <span class="form-label">Name</span>
+      <input type="text" value="m006" style="font-weight:600">
+      <span class="form-label" style="margin-left:6px">$N_{\max}$</span>
+      <input type="number" value="10" style="width:50px">
+      <button class="btn btn-primary">Load</button>
+    </div>
+    <div class="info-bar">
+      <div class="info-item"><span class="info-label">Tetrahedra</span><span class="info-value">3</span></div>
+      <div class="info-item"><span class="info-label">Cusps</span><span class="info-value">1</span></div>
+      <div class="info-item"><span class="info-label">Hard edges</span><span class="info-value">1</span></div>
+      <div class="info-item"><span class="info-label">Easy edges</span><span class="info-value">1</span></div>
+    </div>
+    <h3>Neumann-Zagier Matrix</h3>
+    <p>$$g_{\mathrm{NZ}} = \begin{pmatrix} 1 & 0 & -1 & 0 & 1 & -1 \\ 0 & 1 & -1 & 1 & 0 & -1 \\ -1 & 0 & 1 & 0 & -1 & 1 \\ 0 & -\tfrac{1}{2} & \tfrac{1}{2} & 0 & \tfrac{1}{2} & -\tfrac{1}{2} \\ \tfrac{1}{2} & 0 & -\tfrac{1}{2} & -\tfrac{1}{2} & 0 & \tfrac{1}{2} \\ -\tfrac{1}{2} & \tfrac{1}{2} & 0 & \tfrac{1}{2} & -\tfrac{1}{2} & 0 \end{pmatrix}$$</p>
+    <p>$\nu_x = (0, 0, -2)$, &nbsp; $\nu_p = (0, 0, 0)$</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Refined Index</span><span class="section-status">ready</span></div>
+  <div class="math-area">
+    <div class="form-row">
+      <span class="form-label">Mode</span>
+      <div class="radio-group">
+        <label><input type="radio" name="m1" value="query"> Single query</label>
+        <label><input type="radio" name="m1" value="grid" checked> Grid</label>
+        <label><input type="radio" name="m1" value="cache"> From cache</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <span class="form-label">$m$</span>
+      <input type="number" value="-2" style="width:50px"> <span style="color:#8b949e; font-size:13px">to</span> <input type="number" value="2" style="width:50px">
+      <span class="form-label" style="margin-left:10px">$e$</span>
+      <input type="number" value="-2" style="width:50px" step="0.5"> <span style="color:#8b949e; font-size:13px">to</span> <input type="number" value="2" style="width:50px" step="0.5">
+    </div>
+    <div class="form-row">
+      <span class="form-label">$\eta$</span>
+      <select><option selected>Full refined</option><option>Unrefined (3D index)</option><option>Custom</option></select>
+      <label style="font-size:13px; margin-left:8px"><input type="checkbox" checked> $W_0$</label>
+    </div>
+    <div style="text-align:right">
+      <span class="muted" style="margin-right:10px">45 queries ($5\,m \times 9\,e$)</span>
+      <button class="btn btn-primary">Compute</button>
+    </div>
+    <p class="muted" style="text-align:center; padding:24px 0;">No results yet. Configure and click Compute.</p>
+  </div>
+</div>
+
+<div class="section" style="opacity:0.5">
+  <div class="section-header"><span class="section-title">Dehn Filling</span><span class="section-status">needs index data</span></div>
+</div>
+<div class="section" style="opacity:0.5">
+  <div class="section-header"><span class="section-title">Export</span><span class="section-status">needs data</span></div>
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- STATE 2: Index + Weyl (v0.5 SeriesTable + Weyl fmt)     -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div id="p2">
+<div class="page-title">State 2 &mdash; Refined Index Computed</div>
+<div class="page-subtitle">v0.5 SeriesTable with row numbers, $\mathcal{I}(A\alpha + B\beta)$ notation, copy/remove actions.</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Manifold</span><span class="section-status">m006 &middot; n = 3, r = 1, hard = 1</span></div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Refined Index</span><span class="section-status">45 entries computed</span></div>
+  <div class="math-area">
+    <div class="form-row">
+      <span class="form-label">Mode</span>
+      <div class="radio-group">
+        <label><input type="radio" name="m2"> Single query</label>
+        <label><input type="radio" name="m2" checked> Grid</label>
+        <label><input type="radio" name="m2"> From cache</label>
+      </div>
+      <span style="flex:1"></span>
+      <span class="form-label">$\eta$</span>
+      <select style="width:120px"><option selected>Full refined</option></select>
+      <label style="font-size:13px; margin-left:6px"><input type="checkbox" checked> $W_0$</label>
+    </div>
+
+    <!-- v0.5 SeriesTable: exact column layout from _build_table_parts -->
+    <table class="st">
+      <thead>
+        <tr>
+          <th>#</th>
+          <!-- notation columns: I( | alpha | beta | ) | = -->
+          <th colspan="5"></th>
+          <th>Series</th>
+          <th>Source</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ic">0</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$0\,\alpha_0$</td>
+          <td class="bl">$+\; 0\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$1 + q + 2q^2 + 3q^3 + 5q^4 + \cdots$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a" title="Copy LaTeX">&#x29C9;</button><button class="a r" title="Remove">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">1</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$0\,\alpha_0$</td>
+          <td class="bl">$-\; \tfrac{1}{2}\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$q^{1/2} + q^{3/2} + 2q^{5/2} + 3q^{7/2} + \cdots$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">2</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$\tfrac{1}{2}\,\alpha_0$</td>
+          <td class="bl">$+\; 0\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$\eta^{W_0}(1 + q + q^2 + 2q^3 + 3q^4 + \cdots)$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">3</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$\tfrac{1}{2}\,\alpha_0$</td>
+          <td class="bl">$-\; \tfrac{1}{2}\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$\eta^{W_0}\,q^{1/2}(1 + q + 2q^2 + 3q^3 + \cdots)$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">4</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$0\,\alpha_0$</td>
+          <td class="bl">$-\; 1\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$q + q^2 + 2q^3 + 4q^4 + \cdots$</td>
+          <td class="vc">cached</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">5</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$1\,\alpha_0$</td>
+          <td class="bl">$+\; 0\,\beta_0$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$\eta^{2W_0}(q^{-1} + 1 + q + q^2 + 2q^3 + \cdots)$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td colspan="9" style="text-align:center; color:#8b949e; font-size:11px; padding:6px;">... 39 more entries</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- Filling (ready) -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Dehn Filling</span><span class="section-status">ready</span></div>
+  <div class="math-area">
+    <div class="form-row">
+      <span class="form-label" style="min-width:60px">NC range</span>
+      <span class="form-label">$P$</span>
+      <input type="number" value="-3" style="width:50px"> <span style="color:#8b949e; font-size:13px">to</span> <input type="number" value="3" style="width:50px">
+      <span class="form-label" style="margin-left:8px">$Q$</span>
+      <input type="number" value="0" style="width:50px"> <span style="color:#8b949e; font-size:13px">to</span> <input type="number" value="5" style="width:50px">
+      <button class="btn btn-primary" style="margin-left:6px">Find NC Cycles</button>
+    </div>
+    <div class="sep"></div>
+    <div class="form-row">
+      <span class="form-label" style="min-width:60px">Slope</span>
+      <span class="form-label">$P$</span> <input type="number" value="1" style="width:50px">
+      <span class="form-label">$Q$</span> <input type="number" value="0" style="width:50px">
+      <button class="btn">Compute filled index</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Export</span><span class="section-status">ready</span></div>
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- STATE 3: NC cycles + Filled Index (v0.5 filling_fmt_v2) -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div id="p3">
+<div class="page-title">State 3 &mdash; NC Cycles + Filled Index</div>
+<div class="page-subtitle">v0.5 NC cycle table with per-cusp $\gamma_i$, $\delta_i$ basis, unrefined $q^1$ projection. Per-cycle filled index in SeriesTable format.</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Manifold</span><span class="section-status">m006 &middot; n = 3, r = 1</span></div>
+</div>
+<div class="section">
+  <div class="section-header"><span class="section-title">Refined Index</span><span class="section-status">45 entries computed</span></div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Dehn Filling</span><span class="section-status">5 NC cycles &middot; filled at $(1, 0)$</span></div>
+  <div class="math-area">
+
+    <!-- ── Phase 1: NC Cycle Search ── -->
+    <h3>1. Find Non-closable Cycles</h3>
+    <div class="form-row">
+      <span class="form-label">$|P| \leq$</span>
+      <input type="number" value="3" style="width:50px">
+      <span class="form-label" style="margin-left:8px">$Q_{\max}$</span>
+      <input type="number" value="5" style="width:50px">
+      <label style="font-size:13px; margin-left:10px"><input type="checkbox"> Use cache</label>
+      <button class="btn btn-primary" style="margin-left:6px">Find NC Cycles</button>
+      <span style="flex:1"></span>
+      <span class="muted">5 cycles found &middot; 0.3 s</span>
+    </div>
+
+    <div class="cusp-block">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+        <div class="cusp-title" style="margin-bottom:0">Cusp 0</div>
+        <div class="radio-group" style="font-size:12px;">
+          <label><input type="radio" name="c0m3" checked> Fill</label>
+          <label><input type="radio" name="c0m3"> Charge $(m,\, e)$</label>
+        </div>
+        <span style="flex:1"></span>
+        <span class="form-label">Slope</span>
+        <span class="form-label">$P$</span> <input type="number" value="1" style="width:50px">
+        <span class="form-label">$Q$</span> <input type="number" value="0" style="width:50px">
+      </div>
+      <table class="nc" style="font-size: 0.95em;">
+        <tr>
+          <th style="width:1px"><input type="checkbox" checked title="Select all" style="accent-color:#007aff"></th>
+          <th>#</th>
+          <th>$\gamma_0$</th>
+          <th>$\delta_0$</th>
+          <th>Weyl $(a, b)$</th>
+          <th>$\left.\textrm{Coeff}_{q^1}\right|_{\textrm{adj}\,\mathfrak{su}(2)}$</th>
+          <th>Kernel</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>0</b></td>
+          <td>$\alpha_0$</td>
+          <td>$\beta_0$</td>
+          <td>$(0,\, 0)$</td>
+          <td><span style="white-space:nowrap">$\color{#3fb950}{-1}$</span></td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>1</b></td>
+          <td>$\alpha_0 + \beta_0$</td>
+          <td>$-\beta_0$</td>
+          <td>$(0,\, 0)$</td>
+          <td><span style="white-space:nowrap">$\color{#3fb950}{-1}$</span></td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>2</b></td>
+          <td>$2\,\alpha_0 + \beta_0$</td>
+          <td>$-\alpha_0$</td>
+          <td>$(0,\, 0)$</td>
+          <td><span style="white-space:nowrap">$\color{#f85149}{0}$&nbsp;<b style="color:#f85149">Marginal</b></span></td>
+          <td><small style="color:#d4880a">$K$ (unref.)</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>3</b></td>
+          <td>$\alpha_0 + 2\,\beta_0$</td>
+          <td>$-\beta_0$</td>
+          <td>$(0,\, 0)$</td>
+          <td><span style="white-space:nowrap">$\color{#3fb950}{-1}$</span></td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>4</b></td>
+          <td>$3\,\alpha_0 + \beta_0$</td>
+          <td>$-\alpha_0$</td>
+          <td>$(0,\, 0)$</td>
+          <td><span style="white-space:nowrap">$\color{#f85149}{1}$&nbsp;<b style="color:#f85149">Marginal</b></span></td>
+          <td><small style="color:#d4880a">$K$ (unref.)</small></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="sep"></div>
+
+    <div style="text-align:right; margin-top:8px;">
+      <button class="btn btn-primary">Compute filled index (5 selected)</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ── Results ── -->
+    <h3>2. Results &mdash; slope $(1, 0) = \alpha_0$</h3>
+
+    <!-- NC cycle #0: γ₀ = α₀ -->
+    <div style="background:#f8faf8; border:1px solid #d8e8d8; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>NC Cycle 0: &nbsp; $\gamma_0 = \alpha_0$</b>
+        <small style="color:#2ea043">$K^{\text{ref}}$ IS-chain</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#86868b; margin-right:4px;">Edges:</span>
+        <label style="font-size:13px"><input type="checkbox" checked style="accent-color:#007aff"> $W_0$</label>
+      </div>
+      <p class="muted" style="margin:2px 0;">$(p, q) = (1, 0)$ in $(\gamma_0, \delta_0)$ &nbsp; HJ: $[1]$ &nbsp; Weyl: $a_0 = 0,\; b_0 = 0$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{m006})_{\alpha_0}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$1 + q + q^2 + 2q^3 + 3q^4 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NC cycle #1: γ₀ = α₀ + β₀ -->
+    <div style="background:#f8faf8; border:1px solid #d8e8d8; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>NC Cycle 1: &nbsp; $\gamma_0 = \alpha_0 + \beta_0$</b>
+        <small style="color:#2ea043">$K^{\text{ref}}$ IS-chain</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#86868b; margin-right:4px;">Edges:</span>
+        <label style="font-size:13px"><input type="checkbox" checked style="accent-color:#007aff"> $W_0$</label>
+      </div>
+      <p class="muted" style="margin:2px 0;">$(p, q) = (1, -1)$ in $(\gamma_0, \delta_0)$ &nbsp; HJ: $[1, -1]$ &nbsp; Weyl: $a_0 = 0,\; b_0 = 0$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{m006})_{\alpha_0}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$q^{-1} + 1 + q + q^2 + 2q^3 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NC cycle #2: γ₀ = 2α₀ + β₀ — marginal -->
+    <div style="background:#fffaf5; border:1px solid #e8ddd0; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>NC Cycle 2: &nbsp; $\gamma_0 = 2\,\alpha_0 + \beta_0$</b>
+        <small style="color:#d4880a">$K$ unrefined (marginal)</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#c7c7cc;">no $\eta$ variables</span>
+      </div>
+      <p class="muted" style="margin:2px 0;">$(p, q) = (2, -1)$ in $(\gamma_0, \delta_0)$ &nbsp; HJ: $[2, -1]$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{m006})_{\alpha_0}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$1 + q + q^2 + 2q^3 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NC cycle #3: γ₀ = α₀ + 2β₀ -->
+    <div style="background:#f8faf8; border:1px solid #d8e8d8; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>NC Cycle 3: &nbsp; $\gamma_0 = \alpha_0 + 2\,\beta_0$</b>
+        <small style="color:#2ea043">$K^{\text{ref}}$ IS-chain</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#86868b; margin-right:4px;">Edges:</span>
+        <label style="font-size:13px"><input type="checkbox" checked style="accent-color:#007aff"> $W_0$</label>
+      </div>
+      <p class="muted" style="margin:2px 0;">$(p, q) = (1, -2)$ in $(\gamma_0, \delta_0)$ &nbsp; HJ: $[1, -2]$ &nbsp; Weyl: $a_0 = 0,\; b_0 = 0$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{m006})_{\alpha_0}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$q^{-1} + 2 + 3q + 4q^2 + 6q^3 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NC cycle #4: γ₀ = 3α₀ + β₀ — marginal -->
+    <div style="background:#fffaf5; border:1px solid #e8ddd0; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>NC Cycle 4: &nbsp; $\gamma_0 = 3\,\alpha_0 + \beta_0$</b>
+        <small style="color:#d4880a">$K$ unrefined (marginal)</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#c7c7cc;">no $\eta$ variables</span>
+      </div>
+      <p class="muted" style="margin:2px 0;">$(p, q) = (3, -1)$ in $(\gamma_0, \delta_0)$ &nbsp; HJ: $[3, -1]$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{m006})_{\alpha_0}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$q^{-2} + q^{-1} + 1 + q + 2q^2 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- Export -->
+<div class="section">
+  <div class="section-header"><span class="section-title">Export</span><span class="section-status">ready</span></div>
+  <div class="math-area">
+    <div class="form-row">
+      <span class="form-label" style="min-width:50px">Include</span>
+      <div class="checkbox-group">
+        <label><input type="checkbox" checked> Manifold</label>
+        <label><input type="checkbox" checked> Refined index (45)</label>
+        <label><input type="checkbox" checked> NC cycles (5)</label>
+        <label><input type="checkbox" checked> Filled index</label>
+        <label><input type="checkbox" checked> Weyl check</label>
+      </div>
+    </div>
+    <div class="export-formats">
+      <div class="export-format-item"><input type="checkbox" checked> LaTeX (.tex)</div>
+      <div class="export-format-item"><input type="checkbox" checked> Mathematica (.m)</div>
+      <div class="export-format-item"><input type="checkbox"> JSON</div>
+      <div class="export-format-item"><input type="checkbox"> Full report</div>
+    </div>
+    <div class="export-actions">
+      <button class="btn btn-primary">Export All</button>
+      <button class="btn">Copy LaTeX</button>
+      <button class="btn">Copy Mathematica</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- STATE 4: Multi-cusp (s776, r=2) — same unified layout  -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div id="p4">
+<div class="page-title">State 4 &mdash; Multi-Cusp (s776, r = 2)</div>
+<div class="page-subtitle">Same unified layout — per-cusp blocks scale naturally with $r$. Shows multi-cusp $\mathcal{I}(A_0\alpha_0 + B_0\beta_0,\; A_1\alpha_1 + B_1\beta_1)$.</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Manifold</span><span class="section-status">s776 &middot; n = 5, r = 2, hard = 2</span></div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Refined Index</span><span class="section-status">81 entries</span></div>
+  <div class="math-area">
+    <table class="st">
+      <thead><tr><th>#</th><th colspan="8"></th><th>Series</th><th>Source</th><th></th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="ic">0</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$0\,\alpha_0$</td>
+          <td class="bl">$+\; 0\,\beta_0$</td>
+          <td class="sym">$,$</td>
+          <td class="al">$0\,\alpha_1$</td>
+          <td class="bl">$+\; 0\,\beta_1$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$1 + 2q + 5q^2 + \cdots$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td class="ic">1</td>
+          <td class="i">$\mathcal{I}($</td>
+          <td class="al">$\tfrac{1}{2}\,\alpha_0$</td>
+          <td class="bl">$+\; 0\,\beta_0$</td>
+          <td class="sym">$,$</td>
+          <td class="al">$0\,\alpha_1$</td>
+          <td class="bl">$+\; 0\,\beta_1$</td>
+          <td class="cp">$)$</td>
+          <td class="eq">$=$</td>
+          <td class="sr">$\eta^{W_0}(q^{1/2} + 2q^{3/2} + \cdots)$</td>
+          <td class="vc">computed</td>
+          <td class="ac"><button class="a">&#x29C9;</button><button class="a r">&#x2715;</button></td>
+        </tr>
+        <tr>
+          <td colspan="12" style="text-align:center; color:#8b949e; font-size:11px; padding:6px;">... 79 more entries</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Dehn Filling</span><span class="section-status">filled at $(1,0) \times (1,0)$</span></div>
+  <div class="math-area">
+
+    <h3>1. Find Non-closable Cycles</h3>
+    <div class="form-row" style="margin-bottom:6px;">
+      <span class="form-label">$|P| \leq$</span>
+      <input type="number" value="2" style="width:50px">
+      <span class="form-label" style="margin-left:8px">$Q_{\max}$</span>
+      <input type="number" value="3" style="width:50px">
+      <label style="font-size:13px; margin-left:10px"><input type="checkbox"> Use cache</label>
+      <button class="btn btn-primary" style="margin-left:6px">Find NC Cycles</button>
+      <span style="flex:1"></span>
+      <span class="muted">2 + 2 cycles &middot; 1.2 s</span>
+    </div>
+
+    <!-- Cusp 0 -->
+    <div class="cusp-block">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+        <div class="cusp-title" style="margin-bottom:0">Cusp 0</div>
+        <div class="radio-group" style="font-size:12px;">
+          <label><input type="radio" name="c0m4" checked> Fill</label>
+          <label><input type="radio" name="c0m4"> Charge $(m,\, e)$</label>
+        </div>
+        <span style="flex:1"></span>
+        <span class="form-label">Slope</span>
+        <span class="form-label">$P$</span> <input type="number" value="1" style="width:50px">
+        <span class="form-label">$Q$</span> <input type="number" value="0" style="width:50px">
+      </div>
+      <table class="nc" style="font-size:0.9em;">
+        <tr>
+          <th style="width:1px"><input type="checkbox" checked style="accent-color:#007aff"></th>
+          <th>#</th><th>$\gamma_0$</th><th>$\delta_0$</th>
+          <th>Weyl $(a,\, b)$</th><th>$\left.\textrm{Coeff}_{q^1}\right|_{\textrm{adj}\,\mathfrak{su}(2)}$</th><th>Kernel</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>0</b></td><td>$\alpha_0$</td><td>$\beta_0$</td>
+          <td>$(0,0)$</td>
+          <td>$\color{#3fb950}{-1}$</td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>1</b></td><td>$\alpha_0 + \beta_0$</td><td>$-\beta_0$</td>
+          <td>$(0,0)$</td>
+          <td>$\color{#3fb950}{-1}$</td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Cusp 1 -->
+    <div class="cusp-block">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+        <div class="cusp-title" style="margin-bottom:0">Cusp 1</div>
+        <div class="radio-group" style="font-size:12px;">
+          <label><input type="radio" name="c1m4" checked> Fill</label>
+          <label><input type="radio" name="c1m4"> Charge $(m,\, e)$</label>
+        </div>
+        <span style="flex:1"></span>
+        <span class="form-label">Slope</span>
+        <span class="form-label">$P$</span> <input type="number" value="1" style="width:50px">
+        <span class="form-label">$Q$</span> <input type="number" value="0" style="width:50px">
+      </div>
+      <table class="nc" style="font-size:0.9em;">
+        <tr>
+          <th style="width:1px"><input type="checkbox" checked style="accent-color:#007aff"></th>
+          <th>#</th><th>$\gamma_1$</th><th>$\delta_1$</th>
+          <th>Weyl $(a,\, b)$</th><th>$\left.\textrm{Coeff}_{q^1}\right|_{\textrm{adj}\,\mathfrak{su}(2)}$</th><th>Kernel</th>
+        </tr>
+        <tr>
+          <td><input type="checkbox" checked style="accent-color:#007aff"></td>
+          <td><b>0</b></td><td>$\alpha_1$</td><td>$\beta_1$</td>
+          <td>$(0,0)$</td>
+          <td>$\color{#3fb950}{-1}$</td>
+          <td><small style="color:#2ea043">$K^{\text{ref}}$</small></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" style="accent-color:#007aff"></td>
+          <td><b>1</b></td><td>$\alpha_1 + \beta_1$</td><td>$-\beta_1$</td>
+          <td>$(0,0)$</td>
+          <td>$\color{#f85149}{0}$&nbsp;<b style="color:#f85149; font-size:11px">Marginal</b></td>
+          <td><small style="color:#d4880a">$K$</small></td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align:right; margin-top:8px;">
+      <button class="btn btn-primary">Compute filled index (3 selected)</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- ── Results (joint fill over Cartesian product of selected cycles) ── -->
+    <h3>2. Results &mdash; slopes $(1,0) \times (1,0)$</h3>
+
+    <!-- Cycle pair (C0:#0, C1:#0): both refined, all cusps filled → no () -->
+    <div style="background:#f8faf8; border:1px solid #d8e8d8; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>Cusp 0, NC Cycle 0: $\gamma_0 = \alpha_0$ &nbsp;&mdash;&nbsp; Cusp 1, NC Cycle 0: $\gamma_1 = \alpha_1$</b>
+        <small style="color:#2ea043">$K^{\text{ref}}$ joint</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#86868b; margin-right:4px;">Edges:</span>
+        <label style="font-size:13px"><input type="checkbox" checked style="accent-color:#007aff"> $W_0$</label>
+        <label style="font-size:13px; margin-left:4px"><input type="checkbox" checked style="accent-color:#007aff"> $W_1$</label>
+      </div>
+      <p class="muted" style="margin:2px 0;">C0: $(p,q)=(1,0)$ HJ $[1]$ &nbsp; C1: $(p,q)=(1,0)$ HJ $[1]$ &nbsp; Weyl: $(a_0,b_0)=(0,0),\;(a_1,b_1)=(0,0)$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{s776})_{\alpha_0 + \alpha_1}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$1 + q + 2q^2 + 4q^3 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cycle pair (C0:#1, C1:#0): both refined, all cusps filled → no () -->
+    <div style="background:#f8faf8; border:1px solid #d8e8d8; border-radius:6px; padding:8px 12px; margin:8px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <b>Cusp 0, NC Cycle 1: $\gamma_0 = \alpha_0 + \beta_0$ &nbsp;&mdash;&nbsp; Cusp 1, NC Cycle 0: $\gamma_1 = \alpha_1$</b>
+        <small style="color:#2ea043">$K^{\text{ref}}$ joint</small>
+        <span style="flex:1"></span>
+        <span style="font-size:11px; color:#86868b; margin-right:4px;">Edges:</span>
+        <label style="font-size:13px"><input type="checkbox" checked style="accent-color:#007aff"> $W_0$</label>
+        <label style="font-size:13px; margin-left:4px"><input type="checkbox" disabled title="$a_1 \notin \mathbb{Z}$ in this basis"> <span style="color:#c7c7cc">$W_1$</span></label>
+      </div>
+      <p class="muted" style="margin:2px 0;">C0: $(p,q)=(1,-1)$ HJ $[1,-1]$ &nbsp; C1: $(p,q)=(1,0)$ HJ $[1]$ &nbsp; Weyl: $(a_0,b_0)=(0,0),\;(a_1,b_1)=(\tfrac{1}{3},0)$</p>
+      <table class="st" style="margin: 4px 0;">
+        <tbody>
+          <tr>
+            <td class="i">$\mathcal{I}_{(\mathrm{s776})_{\alpha_0 + \alpha_1}}$</td>
+            <td class="eq">$=$</td>
+            <td class="sr">$q^{-1} + 1 + 2q + 3q^2 + \cdots$</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header"><span class="section-title">Export</span><span class="section-status">ready</span></div>
+</div>
+</div>
+
+<div style="height:200px"></div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

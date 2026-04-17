@@ -165,23 +165,96 @@ impl Census {
     /// returns it. If it appears in multiple censuses, returns `Ambiguous`.
     /// If it does not exist, returns `NotFound`.
     pub fn load(&self, name: &str) -> Result<ManifoldData, CensusError> {
+        // Try direct name lookup first.
         let mut stmt = self
             .conn
             .prepare("SELECT census, n, r, gluing, pivots FROM manifolds WHERE name = ?1")?;
         let mut rows = stmt.query([name])?;
         let first = rows.next()?;
-        let Some(row) = first else {
-            return Err(CensusError::NotFound(name.to_owned()));
-        };
-        let census: String = row.get(0)?;
-        let n: i64 = row.get(1)?;
-        let r: i64 = row.get(2)?;
-        let blob: Vec<u8> = row.get(3)?;
-        let pivots_blob: Vec<u8> = row.get(4)?;
-        if rows.next()?.is_some() {
-            return Err(CensusError::Ambiguous(name.to_owned()));
+        if let Some(row) = first {
+            let census: String = row.get(0)?;
+            let n: i64 = row.get(1)?;
+            let r: i64 = row.get(2)?;
+            let blob: Vec<u8> = row.get(3)?;
+            let pivots_blob: Vec<u8> = row.get(4)?;
+            if rows.next()?.is_some() {
+                return Err(CensusError::Ambiguous(name.to_owned()));
+            }
+            return Self::decode(census, name.to_owned(), n, r, blob, pivots_blob);
         }
-        Self::decode(census, name.to_owned(), n, r, blob, pivots_blob)
+
+        // Try alias resolution (knot notation like 4_1, 5^2_1, etc.).
+        if let Some((census_name, canon_name)) = self.resolve_alias(name)? {
+            return self.load_by_census_name(&census_name, &canon_name);
+        }
+
+        Err(CensusError::NotFound(name.to_owned()))
+    }
+
+    /// Resolve an alias to (census, name). Returns None if no alias found.
+    fn resolve_alias(&self, alias: &str) -> Result<Option<(String, String)>, CensusError> {
+        let result: Option<(String, String)> = self
+            .conn
+            .query_row(
+                "SELECT census, name FROM aliases WHERE alias = ?1",
+                [alias],
+                |row| Ok((row.get(0)?, row.get(1)?)),
+            )
+            .optional()?;
+        Ok(result)
+    }
+
+    /// Try all aliases for `input_name` until one has both manifold + NZ data.
+    /// Returns None if no alias resolves to a manifold with NZ data.
+    pub fn resolve_alias_with_nz(
+        &self,
+        input_name: &str,
+    ) -> Result<Option<(ManifoldData, NzData)>, CensusError> {
+        // Get all aliases for this name (there may be multiple census entries)
+        let mut stmt = self.conn.prepare(
+            "SELECT census, name FROM aliases WHERE alias = ?1"
+        )?;
+        let alias_rows: Vec<(String, String)> = stmt
+            .query_map([input_name], |row| Ok((row.get(0)?, row.get(1)?)))?
+            .filter_map(|r| r.ok())
+            .collect();
+        for (census, name) in &alias_rows {
+            if let Ok(nz) = self.load_nz(census, name) {
+                let md = self.load_by_census_name(census, name)?;
+                return Ok(Some((md, nz)));
+            }
+        }
+        // Also try: input_name itself might be a census name in another census
+        let mut stmt2 = self.conn.prepare(
+            "SELECT census, name FROM manifolds WHERE name = ?1"
+        )?;
+        let direct_rows: Vec<(String, String)> = stmt2
+            .query_map([input_name], |row| Ok((row.get(0)?, row.get(1)?)))?
+            .filter_map(|r| r.ok())
+            .collect();
+        for (census, name) in &direct_rows {
+            if let Ok(nz) = self.load_nz(census, name) {
+                let md = self.load_by_census_name(census, name)?;
+                return Ok(Some((md, nz)));
+            }
+        }
+        Ok(None)
+    }
+
+    /// Load by explicit (census, name) pair.
+    fn load_by_census_name(&self, census: &str, name: &str) -> Result<ManifoldData, CensusError> {
+        let row: Option<(i64, i64, Vec<u8>, Vec<u8>)> = self
+            .conn
+            .query_row(
+                "SELECT n, r, gluing, pivots FROM manifolds WHERE census = ?1 AND name = ?2",
+                [census, name],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+            )
+            .optional()?;
+        let Some((n, r, blob, pivots_blob)) = row else {
+            return Err(CensusError::NotFound(format!("{census}/{name}")));
+        };
+        Self::decode(census.to_owned(), name.to_owned(), n, r, blob, pivots_blob)
     }
 
     /// Fetch the base Neumann-Zagier data for `(census, name)`.
