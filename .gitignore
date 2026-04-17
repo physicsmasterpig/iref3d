@@ -22,7 +22,13 @@ __pycache__/
 # Swift / Xcode
 swift/iref3d/iref3d.xcodeproj/
 swift/iref3d/*.xcworkspace/
+swift/iref3d/.build/
+swift/iref3d/.swiftpm/
 xcuserdata/
+*.pcm
+*.o
+*.dylib
+*.dSYM/
 
 # Local machine-specific Claude permission list
 .claude/
