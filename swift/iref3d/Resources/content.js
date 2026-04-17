@@ -256,7 +256,7 @@ function updateQueryCount() {
 
 function doComputeIndex() {
     if (appState.stage === "empty") return;
-    resetToStage("loaded");
+    document.getElementById("index-results").innerHTML = "";
 
     var params = {
         name: appState.manifoldName,
@@ -671,14 +671,18 @@ function runTests() {
     _testAssert(appState.stage === "nc", "T7: nc on s776");
     _testAssert(document.querySelectorAll(".cusp-block").length === 2, "T7: 2 cusp blocks for r=2");
 
-    // ── Test 8: re-compute index should clear NC + filling ──
-    updateManifold({ name: "s776", n: 5, r: 2, hard: 2, easy: 1,
-        nzLatex: "$$g=2$$", nuX: "(0,0)", nuP: "(0,0)" });
-    updateIndexResults({ r: 2, entries: [
-        { charges: [[0, 0], [0, 0]], series: "1+2q", source: "computed" },
+    // ── Test 8: re-compute index must NOT clear NC + filling (they depend on NZ, not m/e range) ──
+    updateNCCycles({ cusps: [
+        { cuspIdx: 0, cycles: [{ gamma: "\\alpha_0", delta: "\\beta_0", weyl: "(0,0)", q1proj: "-1", marginal: false }] },
+    ], elapsed: "0.1" });
+    updateFillingResults({ manifoldName: "s776", results: [
+        { title: "x", kernelLabel: "k", kernelClass: "refined", muted: "", indexNotation: "I", series: "1", edgeToggles: [] },
     ]});
-    _testAssert(document.getElementById("cusp-blocks").innerHTML === "", "T8: cusp blocks cleared after re-index");
-    _testAssert(document.getElementById("filling-results").innerHTML === "", "T8: filling cleared after re-index");
+    updateIndexResults({ r: 2, entries: [
+        { charges: [[0, 0], [0, 0]], series: "1+3q", source: "computed" },
+    ]});
+    _testAssert(document.getElementById("cusp-blocks").innerHTML !== "", "T8: cusp blocks preserved after re-index");
+    _testAssert(document.getElementById("filling-results").innerHTML !== "", "T8: filling preserved after re-index");
 
     // ── Summarize ──
     for (var i = 0; i < _testLog.length; i++) {

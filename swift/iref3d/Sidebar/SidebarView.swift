@@ -18,6 +18,8 @@ struct SidebarView: View {
                 HStack(spacing: 6) {
                     TextField("Name", text: $manifoldName)
                         .textFieldStyle(.roundedBorder)
+                        .autocorrectionDisabled(true)
+                        .textContentType(.none)
                         .onSubmit { loadManifold() }
                     Button("Load") { loadManifold() }
                         .buttonStyle(.borderedProminent)

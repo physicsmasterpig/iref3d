@@ -32,6 +32,9 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
     private var ncCompatCache: [String: [String: Any]] = [:]
     /// Cancellation flag — checked between steps of multi-call operations.
     private var cancelled: Set<String> = []
+    /// Hard-edge count from the last successful load_manifold — needed to
+    /// correctly parse multi-variate series keys in filled-index output.
+    private var loadedNumHard: Int = 0
 
     // MARK: - JS -> Swift
 
@@ -155,6 +158,7 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
             let r = result["r"] as? Int ?? 0
             let hard = result["hard"] as? Int ?? 0
             let easy = result["easy"] as? Int ?? 0
+            self?.loadedNumHard = hard
             let nzG = result["nz_g_x2"] as? [Any] ?? []
             let nuX = result["nu_x"] as? [Any] ?? []
             let nuP = result["nu_p_x2"] as? [Any] ?? []
@@ -226,12 +230,20 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
                     charges.append([m, e])
                 }
 
-                // Series keys are JSON-encoded Vec<i64>, values are i64
-                var intSeries: [String: Int] = [:]
+                // Series keys: JSON-encoded [q_x2, η_hard_0_x2, ..., η_hard_{numHard-1}_x2].
+                // Values are integer coefficients — wrap as [c, 1] to reuse the
+                // rational formatter (which understands the multi-variate layout
+                // and the η^{kW_j} unified notation).
+                var rationalSeries: [String: [Int]] = [:]
                 for (k, v) in series {
-                    intSeries[k] = (v as? Int) ?? Int(v as? Double ?? 0)
+                    let c = (v as? Int) ?? Int(v as? Double ?? 0)
+                    rationalSeries[k] = [c, 1]
                 }
-                let seriesLatex = Self.formatQSeries(intSeries, qqOrder: qqOrder)
+                let seriesLatex = Self.formatRationalQSeries(
+                    rationalSeries,
+                    numHard: self?.loadedNumHard ?? 0,
+                    hasCuspEta: false
+                )
 
                 jsEntries.append([
                     "charges": charges,
@@ -360,6 +372,8 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
                 }
                 let cuspIdx = cuspSpec["cuspIdx"] as? Int ?? 0
                 let selectedCycles = cuspSpec["selectedCycles"] as? [Int] ?? []
+                let userP = (cuspSpec["p"] as? Int) ?? Int(cuspSpec["p"] as? Double ?? 1)
+                let userQ = (cuspSpec["q"] as? Int) ?? Int(cuspSpec["q"] as? Double ?? 0)
 
                 // Look up stored NC cycle data for this cusp
                 guard cuspIdx < ncCycleData.count,
@@ -370,8 +384,10 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
                 for cycleIdx in selectedCycles {
                     guard cycleIdx < cycles.count else { continue }
                     let cycle = cycles[cycleIdx]
-                    let p = cycle["p"] as? Int ?? 0
-                    let q = cycle["q"] as? Int ?? 0
+                    // Fill at user's slope; keep the selected NC cycle's collapsed edges
+                    // + marginality (both are intrinsic to the cycle, not the slope).
+                    let p = userP
+                    let q = userQ
                     let isMarginal = cycle["marginal"] as? Bool ?? false
                     let collapsed = cycle["collapsed_edges"] as? [Int] ?? []
 
@@ -399,7 +415,12 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
                     let hjStr = hjKs.map(String.init).joined(separator: ", ")
                     let muted = "$(p, q) = (\(p), \(q))$ &nbsp; HJ: $[\(hjStr)]$"
 
-                    let seriesLatex = Self.formatRationalQSeries(rawSeries)
+                    let hasCuspEta = fillResult["has_cusp_eta"] as? Bool ?? false
+                    let seriesLatex = Self.formatRationalQSeries(
+                        rawSeries,
+                        numHard: self.loadedNumHard,
+                        hasCuspEta: hasCuspEta
+                    )
 
                     // Build index notation: I_{(name)_{gamma}}
                     let manifoldName = self.ncCycleData.isEmpty ? "M" : "\\mathrm{\(params["name"] as? String ?? "M")}"
@@ -496,120 +517,162 @@ final class WebViewBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
         return "(" + vals.joined(separator: ", ") + ")"
     }
 
-    /// Format a sparse q-series {key: coeff} as LaTeX.
-    /// Keys are JSON-encoded vectors like "[0]", "[1]", etc.
-    static func formatQSeries(_ series: [String: Int], qqOrder: Int) -> String {
-        // Parse keys as power arrays, sort by total power
-        var terms: [(power: [Int], coeff: Int)] = []
-        for (key, coeff) in series {
-            if let data = key.data(using: .utf8),
-               let arr = try? JSONSerialization.jsonObject(with: data) as? [Int] {
-                terms.append((arr, coeff))
-            }
-        }
-        terms.sort { a, b in
-            let sa = a.power.reduce(0, +)
-            let sb = b.power.reduce(0, +)
-            return sa < sb
-        }
-
-        if terms.isEmpty { return "0" }
-
-        var latex = ""
-        let maxTerms = 6
-        for (i, term) in terms.prefix(maxTerms).enumerated() {
-            let c = term.coeff
-            let p = term.power.first ?? 0
-
-            if i > 0 {
-                if c > 0 { latex += " + " } else { latex += " - " }
-            } else if c < 0 {
-                latex += "-"
-            }
-
-            let ac = abs(c)
-            if p == 0 {
-                latex += "\(ac)"
-            } else {
-                if ac != 1 { latex += "\(ac)" }
-                latex += "q"
-                if p != 1 {
-                    // Handle half-integer powers
-                    if p % 2 == 0 {
-                        latex += "^{\(p / 2)}"
-                    } else {
-                        latex += "^{\(p)/2}"
-                    }
-                }
-            }
-        }
-
-        if terms.count > maxTerms {
-            latex += " + \\cdots"
-        }
-
-        return latex
-    }
-
-    /// Format a rational q-series (from filled index) with (numer, denom) pairs.
-    static func formatRationalQSeries(_ series: [String: [Int]]) -> String {
-        var terms: [(power: [Int], numer: Int, denom: Int)] = []
-        for (key, nd) in series {
-            if let data = key.data(using: .utf8),
+    /// Format a multi-variate filled-index series.
+    ///
+    /// Key layout (all values are ×2, i.e. units of 1/2):
+    ///   key[0]                              — q-power (half-integer)
+    ///   key[1 .. 1+numHard]                 — hard-edge η_j powers (half-integer)
+    ///   key[1+numHard ..] (if hasCuspEta)   — cusp-η (ζ) powers (integer)
+    ///
+    /// Renders as a polynomial in q whose coefficients are Laurent polynomials
+    /// in η_j (and ζ when present), so terms with different η-exponents stay
+    /// distinct instead of collapsing onto the same q-monomial.
+    static func formatRationalQSeries(
+        _ series: [String: [Int]],
+        numHard: Int = 0,
+        hasCuspEta: Bool = false
+    ) -> String {
+        typealias Term = (key: [Int], numer: Int, denom: Int)
+        var terms: [Term] = []
+        for (k, nd) in series {
+            if let data = k.data(using: .utf8),
                let arr = try? JSONSerialization.jsonObject(with: data) as? [Int],
-               nd.count == 2 {
+               nd.count == 2, nd[0] != 0 {
                 terms.append((arr, nd[0], nd[1]))
             }
         }
-        terms.sort { a, b in
-            let sa = a.power.reduce(0, +)
-            let sb = b.power.reduce(0, +)
-            return sa < sb
-        }
-
         if terms.isEmpty { return "0" }
 
-        var latex = ""
-        let maxTerms = 6
-        for (i, term) in terms.prefix(maxTerms).enumerated() {
-            let n = term.numer
-            let d = term.denom
-            let p = term.power.first ?? 0
+        // Group by q^{1/2} power (key[0]).
+        var byQ: [Int: [Term]] = [:]
+        for t in terms {
+            let q = t.key.first ?? 0
+            byQ[q, default: []].append(t)
+        }
 
-            if i > 0 {
-                if n > 0 { latex += " + " } else { latex += " - " }
-            } else if n < 0 {
-                latex += "-"
-            }
+        let sortedQ = byQ.keys.sorted()
+        let maxQ = 8
+        var chunks: [String] = []
+        for q2 in sortedQ.prefix(maxQ) {
+            let bucket: [Term] = byQ[q2] ?? []
+            let coeff = formatEtaCoefficient(bucket, numHard: numHard, hasCuspEta: hasCuspEta)
+            let qStr = formatHalfPower("q", q2)
+            chunks.append(combineCoeffQ(coeff: coeff, qStr: qStr, bucketSize: bucket.count))
+        }
 
-            let an = abs(n)
-            let coeffStr: String
-            if d == 1 {
-                coeffStr = an == 1 && p != 0 ? "" : "\(an)"
+        var out = ""
+        for (i, c) in chunks.enumerated() {
+            if i == 0 {
+                out += c
+            } else if c.hasPrefix("-") {
+                out += " - " + String(c.dropFirst())
             } else {
-                coeffStr = "\\tfrac{\(an)}{\(d)}"
+                out += " + " + c
             }
+        }
+        if sortedQ.count > maxQ { out += " + \\cdots" }
+        return out
+    }
 
-            if p == 0 {
-                latex += coeffStr.isEmpty ? "1" : coeffStr
-            } else {
-                latex += coeffStr
-                latex += "q"
-                if p != 1 {
-                    if p % 2 == 0 {
-                        latex += "^{\(p / 2)}"
-                    } else {
-                        latex += "^{\(p)/2}"
+    /// Render a Laurent polynomial in the η / ζ variables for one q-bucket.
+    private static func formatEtaCoefficient(
+        _ bucket: [(key: [Int], numer: Int, denom: Int)],
+        numHard: Int,
+        hasCuspEta: Bool
+    ) -> String {
+        // Sort by hard-η exponents (lex), then cusp exponents.
+        let sorted = bucket.sorted { a, c in
+            let ea = Array(a.key.dropFirst())
+            let eb = Array(c.key.dropFirst())
+            return ea.lexicographicallyPrecedes(eb)
+        }
+        var parts: [String] = []
+        for t in sorted {
+            let etaTail = Array(t.key.dropFirst())
+            let hasVars = etaTail.contains { $0 != 0 }
+            let coeffStr = formatCoeff(t.numer, denom: t.denom, keepOne: !hasVars)
+            // Unified notation: η_j = η^{2W_j} (hard), ζ_k = η^{V_k} (cusp).
+            // Key holds doubled exponents for hard η (so exp2·W_j falls out
+            // directly) and integer exponents for cusp η.
+            var varStr = ""
+            for j in 0..<numHard {
+                guard j < etaTail.count else { break }
+                let exp2 = etaTail[j]
+                switch exp2 {
+                case 0:  continue
+                case 2:  varStr += "\\eta^{2W_{\(j)}}"
+                case -2: varStr += "\\eta^{-2W_{\(j)}}"
+                case 1:  varStr += "\\eta^{W_{\(j)}}"
+                case -1: varStr += "\\eta^{-W_{\(j)}}"
+                default: varStr += "\\eta^{\(exp2)W_{\(j)}}"
+                }
+            }
+            if hasCuspEta {
+                let cuspStart = numHard
+                for k in cuspStart..<etaTail.count {
+                    let sub = k - cuspStart
+                    let ce = etaTail[k]
+                    switch ce {
+                    case 0:  continue
+                    case 1:  varStr += "\\eta^{V_{\(sub)}}"
+                    case -1: varStr += "\\eta^{-V_{\(sub)}}"
+                    default: varStr += "\\eta^{\(ce)V_{\(sub)}}"
                     }
                 }
             }
+            let full = coeffStr + varStr
+            parts.append(full.isEmpty ? "1" : full)
         }
-
-        if terms.count > maxTerms {
-            latex += " + \\cdots"
+        var out = ""
+        for (i, p) in parts.enumerated() {
+            if i == 0 {
+                out += p
+            } else if p.hasPrefix("-") {
+                out += " - " + String(p.dropFirst())
+            } else {
+                out += " + " + p
+            }
         }
+        return out
+    }
 
-        return latex
+    /// Format signed rational coefficient. If `keepOne` is false and |num|==1,
+    /// returns "" (or "-") so the trailing variables carry the coefficient.
+    private static func formatCoeff(_ numer: Int, denom: Int, keepOne: Bool) -> String {
+        let an = abs(numer)
+        let sign = numer < 0 ? "-" : ""
+        if denom == 1 {
+            if an == 1 && !keepOne { return sign }
+            return sign + "\(an)"
+        }
+        return sign + "\\tfrac{\(an)}{\(denom)}"
+    }
+
+    /// Format v^{k/2} where `x2` is the doubled exponent. Empty if x2==0.
+    private static func formatHalfPower(_ base: String, _ x2: Int) -> String {
+        if x2 == 0 { return "" }
+        if x2 == 2 { return base }
+        if x2 == -2 { return base + "^{-1}" }
+        if x2 % 2 == 0 { return base + "^{\(x2 / 2)}" }
+        return base + "^{\(x2)/2}"
+    }
+
+    /// Format v^{k} where `k` is an integer exponent.
+    private static func formatIntPower(_ base: String, _ k: Int) -> String {
+        if k == 0 { return "" }
+        if k == 1 { return base }
+        if k == -1 { return base + "^{-1}" }
+        return base + "^{\(k)}"
+    }
+
+    /// Combine an η-coefficient with a q-monomial, parenthesising multi-term
+    /// coefficients.
+    private static func combineCoeffQ(coeff: String, qStr: String, bucketSize: Int) -> String {
+        if qStr.isEmpty { return coeff }  // q^0 term
+        if coeff.isEmpty || coeff == "1" { return qStr }
+        if coeff == "-1" { return "-" + qStr }
+        let wrapped = bucketSize > 1 ? "\\left(" + coeff + "\\right)" : coeff
+        return wrapped + qStr
     }
 
     /// Build a slope label like "2\,\alpha_0 + \beta_0" from (p, q).
