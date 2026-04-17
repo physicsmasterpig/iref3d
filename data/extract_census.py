@@ -235,10 +235,20 @@ def main() -> int:
     if args.phase_space or args.nz:
         # Lazy import — pulls in scipy + the v0.5 src tree.
         import os
-        v05_src = os.environ.get(
-            "IREF3D_V05_SRC",
-            "/Users/pmp/Documents/Research/ultimate/v0.5/src",
-        )
+        v05_src = os.environ.get("IREF3D_V05_SRC")
+        if not v05_src:
+            for candidate in [
+                "/Users/pmp/Documents/Research/ultimate/v0.5/src",
+                "/Users/pmp/Documents/ultimate/refined-index/v0.5/src",
+                os.path.expanduser("~/Documents/Research/ultimate/v0.5/src"),
+                os.path.expanduser("~/Documents/ultimate/refined-index/v0.5/src"),
+            ]:
+                if os.path.isdir(os.path.join(candidate, "manifold_index")):
+                    v05_src = candidate
+                    break
+        if not v05_src:
+            print("Cannot find v0.5 source. Set IREF3D_V05_SRC.", file=sys.stderr)
+            return 2
         if v05_src not in sys.path:
             sys.path.insert(0, v05_src)
         from manifold_index.core.phase_space import find_easy_edges

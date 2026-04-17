@@ -23,7 +23,26 @@ import time
 from fractions import Fraction
 from pathlib import Path
 
-V05_SRC_DEFAULT = "/Users/pmp/Documents/Research/ultimate/v0.5/src"
+V05_SRC_CANDIDATES = [
+    # Try env var first, then common locations
+    "/Users/pmp/Documents/Research/ultimate/v0.5/src",
+    "/Users/pmp/Documents/ultimate/refined-index/v0.5/src",
+    os.path.expanduser("~/Documents/Research/ultimate/v0.5/src"),
+    os.path.expanduser("~/Documents/ultimate/refined-index/v0.5/src"),
+]
+
+
+def _find_v05_src() -> str:
+    env = os.environ.get("IREF3D_V05_SRC")
+    if env and os.path.isdir(env):
+        return env
+    for p in V05_SRC_CANDIDATES:
+        if os.path.isdir(os.path.join(p, "manifold_index")):
+            return p
+    raise RuntimeError(
+        "Cannot find v0.5 source tree. Set IREF3D_V05_SRC env var to "
+        "the directory containing manifold_index/ (e.g. .../v0.5/src)"
+    )
 
 
 def _init_worker():
@@ -32,7 +51,7 @@ def _init_worker():
     import numpy as _np
     import snappy as _snappy
 
-    v05_src = os.environ.get("IREF3D_V05_SRC", V05_SRC_DEFAULT)
+    v05_src = _find_v05_src()
     if v05_src not in sys.path:
         sys.path.insert(0, v05_src)
 
